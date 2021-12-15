@@ -1,0 +1,43 @@
+<div class="alain-default__aside-inner">
+  <div nz-dropdown nzTrigger="click" class="alain-default__aside-user">
+    <nz-avatar class="alain-default__aside-user-avatar" [nzSrc]="user.avatar"></nz-avatar>
+    <div class="alain-default__aside-user-info">
+      <strong>{{ user.name }}</strong>
+      <p class="mb0">{{ user.email }}</p>
+    </div>
+  </div>
+  <!-- <nz-dropdown-menu #userMenu="nzDropdownMenu">
+    <ul nz-menu>
+      <li nz-menu-item routerLink="/pro/account/center">{{ 'menu.account.center' | translate }}</li>
+      <li nz-menu-item routerLink="/pro/account/settings">{{ 'menu.account.settings' | translate }}</li>
+    </ul>
+  </nz-dropdown-menu> -->
+  <ul nz-menu *ngIf="role==='admin'" style="margin-top:20px;">
+
+    <li nz-menu-item nzMatchRouter style="text-align: center;">
+      <a [routerLink]="['/dashboard']">首页</a>
+    </li>
+    <li nz-menu-item nzMatchRouter style="text-align: center;">
+      <a [routerLink]="['/booking']">房间预定订单</a>
+    </li>
+    <li nz-menu-item nzMatchRouter style="text-align: center;">
+      <a [routerLink]="['/room']">房间管理</a>
+    </li>
+    <li nz-menu-item nzMatchRouter style="text-align: center;">
+      <a [routerLink]="['/userComment']">评论管理</a>
+    </li>
+  </ul>
+  <ul nz-menu *ngIf="role!=='admin'" style="margin-top:20px;">
+    <li nz-menu-item nzMatchRouter style="text-align: center;">
+      <a [routerLink]="['/userRecommend']">推荐房型</a>
+    </li>
+    <li nz-menu-item nzMatchRouter style="text-align: center;">
+      <a [routerLink]="['/booking']">我的订单</a>
+    </li>
+
+    <li nz-menu-item nzMatchRouter style="text-align: center;">
+      <a [routerLink]="['/userComment']">我的评论</a>
+    </li>
+  </ul>
+  <sidebar-nav class="d-block py-lg"></sidebar-nav>
+</div>
