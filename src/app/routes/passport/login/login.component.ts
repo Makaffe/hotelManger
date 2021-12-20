@@ -121,7 +121,7 @@ export class UserLoginComponent implements OnDestroy {
         // 设置用户Token信息
         this.tokenService.set(res.user);
         // 重新获取 StartupService 内容，我们始终认为应用信息一般都会受当前用户授权范围而影响
-        if (this.userName.value == "admin") {
+        if (this.userName.value === 'admin') {
           //管理员登录
           this.startupSrv.load().then(() => {
             let url = this.tokenService.referrer.url || '/';
@@ -132,10 +132,9 @@ export class UserLoginComponent implements OnDestroy {
           });
         } else {
           // 普通用户登录
-          this.router.navigateByUrl("/room")
+          this.router.navigateByUrl('/room');
         }
-      }
-      );
+      });
   }
 
   // #region social

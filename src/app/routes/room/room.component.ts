@@ -1,139 +1,81 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
-import { NzFormatEmitEvent } from 'ng-zorro-antd';
+import { NzFormatEmitEvent, NzMessageService } from 'ng-zorro-antd';
 import { RoomDetailComponent } from './roomdetail.component';
-export interface TreeNodeInterface {
-    key: number;
-    name: string;
-    age?: number;
-    level?: number;
-    expand?: boolean;
-    address?: string;
-    children?: TreeNodeInterface[];
-    parent?: TreeNodeInterface;
-}
+import { RoomService } from './service/RoomService';
+
 @Component({
-    selector: 'app-room',
-    templateUrl: './room.component.html',
+  selector: 'app-room',
+  templateUrl: './room.component.html',
 })
-
 export class RoomComponent implements OnInit {
-    @ViewChild('bookingDetail', { static: false })
-    roomDetailComponent: RoomDetailComponent
-    listOfMapData: TreeNodeInterface[] = [
-        {
-            key: 1,
-            name: 'John Brown sr.',
-            age: 60,
-            address: 'New York No. 1 Lake Park',
-            children: [
-                {
-                    key: 11,
-                    name: 'John Brown',
-                    age: 42,
-                    address: 'New York No. 2 Lake Park'
-                },
-                {
-                    key: 12,
-                    name: 'John Brown jr.',
-                    age: 30,
-                    address: 'New York No. 3 Lake Park',
-                    children: [
-                        {
-                            key: 121,
-                            name: 'Jimmy Brown',
-                            age: 16,
-                            address: 'New York No. 3 Lake Park'
-                        }
-                    ]
-                },
-                {
-                    key: 13,
-                    name: 'Jim Green sr.',
-                    age: 72,
-                    address: 'London No. 1 Lake Park',
-                    children: [
-                        {
-                            key: 131,
-                            name: 'Jim Green',
-                            age: 42,
-                            address: 'London No. 2 Lake Park',
-                            children: [
-                                {
-                                    key: 1311,
-                                    name: 'Jim Green jr.',
-                                    age: 25,
-                                    address: 'London No. 3 Lake Park'
-                                },
-                                {
-                                    key: 1312,
-                                    name: 'Jimmy Green sr.',
-                                    age: 18,
-                                    address: 'London No. 4 Lake Park'
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            key: 2,
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park'
-        }
-    ];
-    mapOfExpandedData: { [key: string]: TreeNodeInterface[] } = {};
+  @ViewChild('bookingDetail', { static: false })
+  roomDetailComponent: RoomDetailComponent;
+  listData = [];
 
-    collapse(array: TreeNodeInterface[], data: TreeNodeInterface, $event: boolean): void {
-        if ($event === false) {
-            if (data.children) {
-                data.children.forEach(d => {
-                    const target = array.find(a => a.key === d.key)!;
-                    target.expand = false;
-                    this.collapse(array, target, false);
-                });
-            } else {
-                return;
-            }
-        }
-    }
+  // 树形表格
+  mapOfExpandedData: { [id: string]: any[] } = {};
 
-    convertTreeToList(root: TreeNodeInterface): TreeNodeInterface[] {
-        const stack: TreeNodeInterface[] = [];
-        const array: TreeNodeInterface[] = [];
-        const hashMap = {};
-        stack.push({ ...root, level: 0, expand: false });
-
-        while (stack.length !== 0) {
-            const node = stack.pop()!;
-            this.visitNode(node, hashMap, array);
-            if (node.children) {
-                for (let i = node.children.length - 1; i >= 0; i--) {
-                    stack.push({ ...node.children[i], level: node.level! + 1, expand: false, parent: node });
-                }
-            }
-        }
-
-        return array;
-    }
-
-    visitNode(node: TreeNodeInterface, hashMap: { [key: string]: boolean }, array: TreeNodeInterface[]): void {
-        if (!hashMap[node.key]) {
-            hashMap[node.key] = true;
-            array.push(node);
-        }
-    }
-
-    showModal() {
-
-    }
-
-    ngOnInit(): void {
-        this.listOfMapData.forEach(item => {
-            this.mapOfExpandedData[item.key] = this.convertTreeToList(item);
+  collapse(array: any[], data: any, $event: boolean): void {
+    if ($event === false) {
+      if (data.children) {
+        data.children.forEach((d) => {
+          // tslint:disable-next-line:no-non-null-assertion
+          const target = array.find((a) => a.id === d.id)!;
+          target.expand = false;
+          this.collapse(array, target, false);
         });
+      } else {
+        return;
+      }
+    }
+  }
+
+  convertTreeToList(root: any): any[] {
+    const stack: any[] = [];
+    const array: any[] = [];
+    const hashMap = {};
+    stack.push({ ...root, level: 0, expand: false });
+
+    while (stack.length !== 0) {
+      // tslint:disable-next-line:no-non-null-assertion
+      const node = stack.pop()!;
+      this.visitNode(node, hashMap, array);
+      if (node.children) {
+        for (let i = node.children.length - 1; i >= 0; i--) {
+          // tslint:disable-next-line:no-non-null-assertion
+          stack.push({ ...node.children[i], level: node.level! + 1, expand: false, parent: node });
+        }
+      }
     }
 
+    return array;
+  }
+
+  visitNode(node: any, hashMap: { [id: string]: boolean }, array: any[]): void {
+    if (!hashMap[node.id]) {
+      hashMap[node.id] = true;
+      array.push(node);
+    }
+  }
+
+  showModal() {}
+  constructor(private msg: NzMessageService, private roomService: RoomService) {}
+
+  ngOnInit(): void {
+    this.load();
+  }
+
+  load() {
+    this.roomService.findAll().subscribe((data) => {
+      this.listData = data;
+      this.listData.forEach((item) => {
+        this.mapOfExpandedData[item.id] = this.convertTreeToList(item);
+      });
+    });
+  }
+
+  edit(item: any, isWatch: boolean) {}
+
+  delete(id: string) {}
 }

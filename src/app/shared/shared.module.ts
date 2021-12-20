@@ -12,6 +12,8 @@ import { SHARED_DELON_MODULES } from './shared-delon.module';
 import { SHARED_ZORRO_MODULES } from './shared-zorro.module';
 import { AngularSplitModule } from 'angular-split';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { NzCascaderModule } from 'ng-zorro-antd/cascader';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 // #region third libs
 
 const THIRDMODULES = [];
@@ -38,15 +40,17 @@ const DIRECTIVES = [];
     DelonFormModule,
     AngularSplitModule,
     NzListModule,
+    NzCascaderModule,
+    NzDatePickerModule,
     ...SHARED_DELON_MODULES,
     ...SHARED_ZORRO_MODULES,
     // third libs
-    ...THIRDMODULES
+    ...THIRDMODULES,
   ],
   declarations: [
     // your components
     ...COMPONENTS,
-    ...DIRECTIVES
+    ...DIRECTIVES,
   ],
   exports: [
     CommonModule,
@@ -61,13 +65,15 @@ const DIRECTIVES = [];
     NzSkeletonModule,
     AngularSplitModule,
     NzListModule,
+    NzCascaderModule,
+    NzDatePickerModule,
     ...SHARED_DELON_MODULES,
     ...SHARED_ZORRO_MODULES,
     // third libs
     ...THIRDMODULES,
     // your components
     ...COMPONENTS,
-    ...DIRECTIVES
-  ]
+    ...DIRECTIVES,
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

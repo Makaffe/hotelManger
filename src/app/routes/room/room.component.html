@@ -1,22 +1,22 @@
-<as-split direction="vertical" style="background-color: white;">
+<as-split direction="vertical" style="background-color: white">
   <as-split-area>
     <form nz-form>
-      <div nz-row [nzGutter]="24" style="margin: 10px;">
+      <div nz-row [nzGutter]="24" style="margin: 10px">
         <div nz-col>
           <nz-form-item>
             <nz-form-label nzSpan="2">房间名称</nz-form-label>
             <nz-form-control nzSpan="7">
-              <input nz-input>
+              <input nz-input />
             </nz-form-control>
             <nz-form-label nzSpan="2">房间名称</nz-form-label>
             <nz-form-control nzspan="7">
-              <input nz-input>
+              <input nz-input />
             </nz-form-control>
             <nz-form-label nzSpan="2">房间名称</nz-form-label>
             <nz-form-control nzSpan="7">
-              <input nz-input>
+              <input nz-input />
             </nz-form-control>
-            <button nz-button nzType="primary" style="margin-left: 200px;">查询</button>
+            <button nz-button nzType="primary" style="margin-left: 200px">查询</button>
             <button nz-button nzType="default">清空</button>
           </nz-form-item>
         </div>
@@ -24,27 +24,51 @@
     </form>
   </as-split-area>
 
-
   <as-split-area>
     <button nz-button nzType="primary" (click)="showModal()">新增房间信息</button>
-    <nz-table #expandTable [nzData]="listOfMapData">
+    <nz-table #expandTable [nzData]="listData">
       <thead>
         <tr>
-          <th nzWidth="40%">Name</th>
-          <th nzWidth="30%">Age</th>
-          <th>Address</th>
+          <th nzWidth="50px">序号</th>
+          <th>楼层名</th>
+          <th>房间名</th>
+          <th>状态</th>
+          <th>图片</th>
+          <th>描述</th>
+          <th>价格</th>
+          <th nzAlign="center">操作</th>
         </tr>
       </thead>
       <tbody>
         <ng-container *ngFor="let data of expandTable.data">
-          <ng-container *ngFor="let item of mapOfExpandedData[data.key]">
+          <ng-container *ngFor="let item of mapOfExpandedData[data.id]">
             <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
-              <td [nzIndentSize]="item.level * 20" [nzShowExpand]="!!item.children" [(nzExpand)]="item.expand"
-                (nzExpandChange)="collapse(mapOfExpandedData[data.key], item, $event)">
-                {{ item.name }}
+              <td
+                [nzIndentSize]="item.level * 20"
+                [nzShowExpand]="item.children.length > 0"
+                [(nzExpand)]="item.expand"
+                (nzExpandChange)="collapse(mapOfExpandedData[data.id], item, $event)"
+              ></td>
+              <td>{{ item.hallName }}</td>
+              <td>{{ item.roomName }}</td>
+              <td>
+                <nz-tag *ngIf="!item.status" [nzColor]="'magenta'">已预约</nz-tag>
+                <nz-tag *ngIf="item.status" [nzColor]="'green'">可预约</nz-tag>
               </td>
-              <td>{{ item.age }}</td>
-              <td>{{ item.address }}</td>
+              <td><img *ngIf="item.image" alt="example" [src]="item.image" /></td>
+              <td>{{ item.description }}</td>
+              <td>{{ item.price }}</td>
+              <td nzAlign="center">
+                <a (click)="edit(item, false)" *ngIf="item.level === 0"> 新增 </a>
+                <nz-divider nzType="vertical" *ngIf="item.level === 0"></nz-divider>
+                <a (click)="edit(item, false)">编辑</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="edit(item, true)">查看</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a nz-popconfirm nzPopconfirmPlacement="bottom" nzPopconfirmTitle="是否要删除该条数据" (nzOnConfirm)="delete(item.id)">
+                  删除
+                </a>
+              </td>
             </tr>
           </ng-container>
         </ng-container>
