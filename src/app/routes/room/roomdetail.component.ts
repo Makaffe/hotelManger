@@ -1,88 +1,123 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, NgForm, ValidationErrors, Validators } from '@angular/forms';
 import { _HttpClient } from '@delon/theme';
 
 import { EChartsOption } from 'echarts';
+import { NzMessageService } from 'ng-zorro-antd';
 import { Observable, Observer } from 'rxjs';
+import { RoomDTO } from './model/RoomDTO';
+import { RoomService } from './service/RoomService';
 
 @Component({
-    selector: 'app-room-detail',
-    templateUrl: './roomdetail.component.html',
+  selector: 'app-room-detail',
+  templateUrl: './roomdetail.component.html',
 })
 export class RoomDetailComponent implements OnInit {
-    isVisible = false;
-    isOkLoading = false;
+  /**
+   * 表单组件
+   */
+  @ViewChild('form', { static: false })
+  form: NgForm;
 
-    showModal(): void {
-        this.isVisible = true;
-    }
+  /**
+   * 发送通知
+   */
+  // tslint:disable-next-line:member-ordering
+  @Output()
+  notification = new EventEmitter<any>();
 
-    handleOk(): void {
-        this.isOkLoading = true;
-        setTimeout(() => {
-            this.isVisible = false;
-            this.isOkLoading = false;
-        }, 3000);
-    }
+  // 表单
+  // tslint:disable-next-line:member-ordering
+  validateForm: FormGroup;
 
-    handleCancel(): void {
-        this.isVisible = false;
-    }
-    validateForm: FormGroup;
+  // 是否只是查看
+  isWatch = false;
 
-    submitForm(value: any): void {
-        for (const key in this.validateForm.controls) {
-            this.validateForm.controls[key].markAsDirty();
-            this.validateForm.controls[key].updateValueAndValidity();
-        }
-        console.log(value);
-    }
+  // 是否在楼层中添加房间
+  isAddRoom = false;
 
-    resetForm(e: MouseEvent): void {
-        e.preventDefault();
-        this.validateForm.reset();
-        for (const key in this.validateForm.controls) {
-            this.validateForm.controls[key].markAsPristine();
-            this.validateForm.controls[key].updateValueAndValidity();
-        }
-    }
+  // 是否可见
+  isVisible = false;
 
-    validateConfirmPassword(): void {
-        setTimeout(() => this.validateForm.controls.confirm.updateValueAndValidity());
-    }
+  // ok读取
+  // tslint:disable-next-line:member-ordering
+  isOkLoading = false;
 
-    userNameAsyncValidator = (control: FormControl) =>
-        new Observable((observer: Observer<ValidationErrors | null>) => {
-            setTimeout(() => {
-                if (control.value === 'JasonWood') {
-                    // you have to return `{error: true}` to mark it as an error event
-                    observer.next({ error: true, duplicated: true });
-                } else {
-                    observer.next(null);
-                }
-                observer.complete();
-            }, 1000);
-        });
+  // 楼层名称
+  // tslint:disable-next-line:member-ordering
+  hallName = '';
 
-    confirmValidator = (control: FormControl): { [s: string]: boolean } => {
-        if (!control.value) {
-            return { error: true, required: true };
-        } else if (control.value !== this.validateForm.controls.password.value) {
-            return { confirm: true, error: true };
-        }
-        return {};
+  // 房间名称
+  // tslint:disable-next-line:member-ordering
+  houseName = '';
+
+  // 值
+  values: any[] | null = null;
+
+  // 预约订单初始化函数
+  paramsItem = this.initRoom();
+  initRoom(item?: RoomDTO): RoomDTO {
+    return {
+      id: item ? item.id : null,
+      roomName: item ? item.roomName : null,
+      hallName: item ? item.hallName : null,
+      description: item ? item.description : null,
+      price: item ? item.price : null,
+      parent_Id: item ? item.parent_Id : null,
+      status: item ? item.status : null,
+      chidren: item ? item.chidren : [],
+      image: item ? item.image : null,
     };
+  }
 
-    constructor(private fb: FormBuilder) {
-        this.validateForm = this.fb.group({
-            userName: ['', [Validators.required], [this.userNameAsyncValidator]],
-            email: ['', [Validators.email, Validators.required]],
-            password: ['', [Validators.required]],
-            confirm: ['', [this.confirmValidator]],
-            comment: ['', [Validators.required]]
-        });
+  addHall(): void {
+    this.isAddRoom = false;
+    this.isVisible = true;
+  }
+  addRoom(item: RoomDTO, isWatch: boolean): void {
+    this.isAddRoom = true;
+    this.isWatch = isWatch;
+    this.paramsItem.hallName = item.hallName;
+    this.paramsItem.parent_Id = item.id;
+    this.isVisible = true;
+  }
+  editRoom(item: RoomDTO, isWatch: boolean): void {
+    this.isWatch = isWatch;
+    this.paramsItem = this.initRoom(item);
+    this.isVisible = true;
+  }
+
+  handleOk(): void {
+    if (!this.isAddRoom) {
+      if ((this.paramsItem.roomName || this.paramsItem.hallName || this.paramsItem.description || this.paramsItem.status) === null) {
+        this.msg.error('请填好带*号的内容');
+        return;
+      }
+    } else {
+      if (
+        (this.paramsItem.roomName ||
+          this.paramsItem.hallName ||
+          this.paramsItem.description ||
+          this.paramsItem.status ||
+          this.paramsItem.image ||
+          this.paramsItem.price) === null
+      ) {
+        this.msg.error('请填好带*号的内容');
+        return;
+      }
     }
-    ngOnInit(): void {
-        throw new Error('Method not implemented.');
-    }
+    this.roomService.create(this.paramsItem).subscribe((data) => {
+      this.notification.emit();
+      this.msg.success('新建成功');
+      this.handleCancel();
+    });
+  }
+
+  handleCancel(): void {
+    this.form.reset('form');
+    this.isVisible = false;
+  }
+
+  constructor(private roomService: RoomService, private msg: NzMessageService) {}
+  ngOnInit(): void {}
 }

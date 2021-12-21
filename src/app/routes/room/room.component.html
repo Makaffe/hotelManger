@@ -59,7 +59,7 @@
               <td>{{ item.description }}</td>
               <td>{{ item.price }}</td>
               <td nzAlign="center">
-                <a (click)="edit(item, false)" *ngIf="item.level === 0"> 新增 </a>
+                <a (click)="addRoom(item, false)" *ngIf="item.level === 0"> 新增 </a>
                 <nz-divider nzType="vertical" *ngIf="item.level === 0"></nz-divider>
                 <a (click)="edit(item, false)">编辑</a>
                 <nz-divider nzType="vertical"></nz-divider>
@@ -76,3 +76,4 @@
     </nz-table>
   </as-split-area>
 </as-split>
+<app-room-detail #roomDetail (notification)="load()"></app-room-detail>

@@ -1,9 +1,10 @@
-<nz-modal [(nzVisible)]="isVisible" nzTitle="Modal Title" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+<nz-modal [(nzVisible)]="isVisible" nzTitle="订单详情" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
   <form #form="ngForm" nz-form>
     <nz-form-item>
       <nz-form-label [nzSpan]="7" nzRequired>房间名</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="roomErrorTpl">
         <nz-cascader
+          [nzAllowClear]="false"
           [nzOptions]="roomOptions"
           name="roomId"
           [(ngModel)]="paramsItem.room_Id"
@@ -18,7 +19,7 @@
       <nz-form-label [nzSpan]="7" nzRequired>用户名</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="userErrorTpl">
         <nz-select
-          nzAllowClear
+          [nzAllowClear]="false"
           nzShowSearch
           nzPlaceHolder="请选择"
           name="userId"
@@ -35,7 +36,13 @@
     <nz-form-item>
       <nz-form-label [nzSpan]="7" nzRequired>时间段</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="timeErrorTpl">
-        <nz-range-picker name="date" [nzFormat]="dateFormat" [(ngModel)]="dateRange" (ngModelChange)="chooseDate($event)">
+        <nz-range-picker
+          [nzAllowClear]="false"
+          name="date"
+          [nzFormat]="dateFormat"
+          [(ngModel)]="dateRange"
+          (ngModelChange)="chooseDate($event)"
+        >
         </nz-range-picker>
         <ng-template #timeErrorTpl let-control>
           <ng-container *ngIf="control.hasError('required')"> Please choose your time! </ng-container>

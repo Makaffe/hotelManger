@@ -43,11 +43,13 @@ export class BookingComponent implements OnInit {
   }
 
   endOrder(id: string) {
-    this.bookingService.endOrder(id).subscribe(() => {});
-    setTimeout(() => {
+    this.bookingService.endOrder(id).subscribe((data) => {
+      // tslint:disable-next-line:label-position
+      // tslint:disable-next-line:no-unused-expression
+      this.bookingDetailComponent.loadRoom();
       this.load();
       this.loading = false;
       this.msg.success(`订单结束`);
-    }, 1000);
+    });
   }
 }

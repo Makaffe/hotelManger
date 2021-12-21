@@ -69,51 +69,26 @@ export class BookingDetailComponent implements OnInit {
   }
 
   handleOk(): void {
-    this.bookingService.create(this.paramsItem).subscribe((data) => {});
-
-    setTimeout(() => {
+    if (
+      this.paramsItem.room_Id === null ||
+      this.paramsItem.user_Id === null ||
+      this.paramsItem.startDate === null ||
+      this.paramsItem.endDate === null
+    ) {
+      this.msg.error('请把带*号的信息填完');
+      return;
+    }
+    this.bookingService.create(this.paramsItem).subscribe((data) => {
       this.notification.emit();
       this.msg.success('新增成功');
-    }, 1000);
-    this.handleCancel();
+      this.handleCancel();
+    });
   }
 
   handleCancel(): void {
     this.form.reset('form');
     this.isVisible = false;
   }
-
-  submitForm(value: any): void {
-    // tslint:disable-next-line:forin
-    for (const key in this.validateForm.controls) {
-      this.validateForm.controls[key].markAsDirty();
-      this.validateForm.controls[key].updateValueAndValidity();
-    }
-    console.log(value);
-  }
-
-  resetForm(e: MouseEvent): void {
-    e.preventDefault();
-    this.validateForm.reset();
-    // tslint:disable-next-line:forin
-    for (const key in this.validateForm.controls) {
-      this.validateForm.controls[key].markAsPristine();
-      this.validateForm.controls[key].updateValueAndValidity();
-    }
-  }
-
-  validateConfirmPassword(): void {
-    setTimeout(() => this.validateForm.controls.confirm.updateValueAndValidity());
-  }
-
-  confirmValidator = (control: FormControl): { [s: string]: boolean } => {
-    if (!control.value) {
-      return { error: true, required: true };
-    } else if (control.value !== this.validateForm.controls.password.value) {
-      return { confirm: true, error: true };
-    }
-    return {};
-  };
 
   /**
    *
@@ -172,15 +147,7 @@ export class BookingDetailComponent implements OnInit {
     private bookingService: BookingService,
     private msg: NzMessageService,
     private datepipe: DatePipe,
-  ) {
-    this.validateForm = this.fb.group({
-      userName: ['', [Validators.required]],
-      email: ['', [Validators.email, Validators.required]],
-      password: ['', [Validators.required]],
-      confirm: ['', [this.confirmValidator]],
-      comment: ['', [Validators.required]],
-    });
-  }
+  ) {}
   ngOnInit(): void {
     this.loadRoom();
 
@@ -205,7 +172,7 @@ export class BookingDetailComponent implements OnInit {
    * 格式成级联选择数据
    */
   fomatCascadeData(data?: Array<any>): Array<any> {
-    data = data.filter((row) => row.id > 0);
+    data = data.filter((row) => row.id > 0 && row.status === true);
     data = [...data];
     data.forEach((item) => {
       this.organizationTreeMap.set(item.id, item.roomName);

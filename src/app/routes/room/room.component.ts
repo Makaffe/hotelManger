@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { _HttpClient } from '@delon/theme';
 import { NzFormatEmitEvent, NzMessageService } from 'ng-zorro-antd';
+import { RoomDTO } from './model/RoomDTO';
 import { RoomDetailComponent } from './roomdetail.component';
 import { RoomService } from './service/RoomService';
 
@@ -9,7 +10,7 @@ import { RoomService } from './service/RoomService';
   templateUrl: './room.component.html',
 })
 export class RoomComponent implements OnInit {
-  @ViewChild('bookingDetail', { static: false })
+  @ViewChild('roomDetail', { static: false })
   roomDetailComponent: RoomDetailComponent;
   listData = [];
 
@@ -59,7 +60,9 @@ export class RoomComponent implements OnInit {
     }
   }
 
-  showModal() {}
+  showModal() {
+    this.roomDetailComponent.addHall();
+  }
   constructor(private msg: NzMessageService, private roomService: RoomService) {}
 
   ngOnInit(): void {
@@ -75,7 +78,17 @@ export class RoomComponent implements OnInit {
     });
   }
 
-  edit(item: any, isWatch: boolean) {}
+  addRoom(item: RoomDTO, isWatch: boolean) {
+    this.roomDetailComponent.addRoom(item, isWatch);
+  }
+  edit(item: RoomDTO, isWatch: boolean) {
+    this.roomDetailComponent.editRoom(item, isWatch);
+  }
 
-  delete(id: string) {}
+  delete(id: string) {
+    this.roomService.delete(id).subscribe((data) => {
+      this.msg.success('删除成功');
+      this.load();
+    });
+  }
 }

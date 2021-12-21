@@ -1,66 +1,127 @@
-<nz-modal [(nzVisible)]="isVisible" nzTitle="Modal Title" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()"
-  [nzOkLoading]="isOkLoading">
-  <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm(validateForm.value)">
+<nz-modal [(nzVisible)]="isVisible" nzTitle="房间详情" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+  <form #form="ngForm" nz-form>
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>Username</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="userErrorTpl">
-        <input nz-input formControlName="userName" placeholder="async validate try to write JasonWood" />
-        <ng-template #userErrorTpl let-control>
-          <ng-container *ngIf="control.hasError('required')">
-            Please input your username!
-          </ng-container>
-          <ng-container *ngIf="control.hasError('duplicated')">
-            The username is redundant!
-          </ng-container>
-        </ng-template>
+      <nz-form-label [nzSpan]="7" nzRequired>楼层名</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <input
+          nz-input
+          autocomplete="off"
+          name="hallName"
+          [(ngModel)]="paramsItem.hallName"
+          placeholder="请填写"
+          #hallName="ngModel"
+          required
+          maxlength="255"
+          [readOnly]="isWatch || isAddRoom"
+        />
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>E-mail</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="emailErrorTpl">
-        <input nz-input formControlName="email" placeholder="email" type="email" />
-        <ng-template #emailErrorTpl let-control>
-          <ng-container *ngIf="control.hasError('email')">
-            The input is not valid E-mail!
-          </ng-container>
-          <ng-container *ngIf="control.hasError('required')">
-            Please input your E-mail!
-          </ng-container>
-        </ng-template>
+      <nz-form-label [nzSpan]="7" nzRequired>房间名</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <input
+          nz-input
+          autocomplete="off"
+          name="roomName"
+          [(ngModel)]="paramsItem.roomName"
+          placeholder="请填写"
+          #roomName="ngModel"
+          required
+          maxlength="255"
+          [readOnly]="isWatch"
+        />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="!isAddRoom">
+      <nz-form-label [nzSpan]="7">价格</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <nz-input-number
+          name="price"
+          #price="ngModel"
+          [(ngModel)]="paramsItem.price"
+          [nzMin]="500"
+          [nzStep]="100"
+          placeholder="请填写"
+          [disabled]="isWatch"
+        ></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="isAddRoom">
+      <nz-form-label nzRequired [nzSpan]="7">价格</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <nz-input-number
+          required
+          name="price"
+          #price="ngModel"
+          [(ngModel)]="paramsItem.price"
+          [nzMin]="500"
+          [nzStep]="100"
+          placeholder="请填写"
+          [disabled]="isWatch"
+        ></nz-input-number>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>Password</nz-form-label>
-      <div>
-        <nz-form-control [nzSpan]="12" nzHasFeedback nzErrorTip="Please input your password!">
-          <input nz-input type="password" formControlName="password" (ngModelChange)="validateConfirmPassword()" />
-        </nz-form-control>
-      </div>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>Confirm Password</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="passwordErrorTpl">
-        <input nz-input type="password" formControlName="confirm" placeholder="confirm your password" />
-        <ng-template #passwordErrorTpl let-control>
-          <ng-container *ngIf="control.hasError('required')">
-            Please confirm your password!
-          </ng-container>
-          <ng-container *ngIf="control.hasError('confirm')">
-            Password is inconsistent!
-          </ng-container>
-        </ng-template>
+      <nz-form-label [nzSpan]="7" nzRequired>房间状态</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <nz-switch
+          nzCheckedChildren="1"
+          nzUnCheckedChildren="0"
+          [(ngModel)]="paramsItem.status"
+          required
+          [nzDisabled]="isWatch"
+          name="status"
+          #price="ngModel"
+        ></nz-switch>
       </nz-form-control>
     </nz-form-item>
-    <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>Comment</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzErrorTip="Please write something here!">
-        <textarea formControlName="comment" nz-input rows="2" placeholder="write any thing"></textarea>
+
+    <nz-form-item *ngIf="!isAddRoom">
+      <nz-form-label [nzSpan]="7">图片链接</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <input
+          nz-input
+          required
+          autocomplete="off"
+          name="image"
+          [(ngModel)]="paramsItem.image"
+          placeholder="请填写"
+          #image="ngModel"
+          maxlength="255"
+          [readOnly]="isWatch"
+        />
       </nz-form-control>
     </nz-form-item>
+    <nz-form-item *ngIf="isAddRoom">
+      <nz-form-label nzRequired [nzSpan]="7">图片链接</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <input
+          nz-input
+          required
+          autocomplete="off"
+          name="image"
+          [(ngModel)]="paramsItem.image"
+          placeholder="请填写"
+          #image="ngModel"
+          maxlength="255"
+          [readOnly]="isWatch"
+        />
+      </nz-form-control>
+    </nz-form-item>
+
     <nz-form-item>
-      <nz-form-control [nzOffset]="7" [nzSpan]="12">
-        <button nz-button nzType="primary" [disabled]="!validateForm.valid">Submit</button>
-        <button nz-button (click)="resetForm($event)">Reset</button>
+      <nz-form-label [nzSpan]="7" nzRequired>房间描述</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <textarea
+          rows="4"
+          nz-input
+          [(ngModel)]="paramsItem.description"
+          placeholder="请填写"
+          name="description"
+          #description="ngModel"
+          required
+          [readOnly]="isWatch"
+        ></textarea>
       </nz-form-control>
     </nz-form-item>
   </form>
