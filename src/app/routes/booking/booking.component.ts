@@ -3,6 +3,7 @@ import { _HttpClient } from '@delon/theme';
 
 import { EChartsOption } from 'echarts';
 import { NzMessageService } from 'ng-zorro-antd';
+import { CommentDetailComponent } from '../UserComponent/userComment/comment-detail.component';
 import { BookingDetailComponent } from './booking-detail.component';
 import { BookingService } from './service/BookingService';
 @Component({
@@ -13,12 +14,17 @@ export class BookingComponent implements OnInit {
   constructor(public http: _HttpClient, private bookingService: BookingService, private msg: NzMessageService) {}
   @ViewChild('bookingDetail', { static: false })
   bookingDetailComponent: BookingDetailComponent;
+  @ViewChild('commentDetail', { static: false })
+  commentDetailComponent: CommentDetailComponent;
+
   // 判断身份登录
   role: string;
 
   // 表格读取
   loading = false;
+
   listOfData = [];
+
   ngOnInit(): void {
     this.http.get('/login/account?_allow_anonymous=true').subscribe((data) => {
       if (data.userName !== 'admin') {
@@ -51,5 +57,9 @@ export class BookingComponent implements OnInit {
       this.loading = false;
       this.msg.success(`订单结束`);
     });
+  }
+
+  addComment(data: any) {
+    this.commentDetailComponent.addComment(data);
   }
 }

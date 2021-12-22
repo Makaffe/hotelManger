@@ -1,24 +1,57 @@
-<nz-list class="demo-loadmore-list" [nzDataSource]="list" [nzItemLayout]="'horizontal'" [nzLoading]="initLoading"
-  [nzRenderItem]="item" [nzLoadMore]="loadMore">
-  <ng-template #item let-item>
-    <nz-list-item [nzContent]="item.loading ? '' : 'content'"
-      [nzActions]="item.loading ? [] : [editAction, moreAction]">
-      <nz-skeleton [nzAvatar]="true" [nzActive]="true" [nzTitle]="false" [nzLoading]="item.loading">
-        <ng-template #editAction><a (click)="edit(item)">edit</a></ng-template>
-        <ng-template #moreAction><a (click)="edit(item)">more</a></ng-template>
-        <nz-list-item-meta [nzTitle]="nzTitle"
-          nzAvatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-          nzDescription="Ant Design, a design language for background applications, is refined by Ant UED Team">
-          <ng-template #nzTitle>
-            <a href="https://ng.ant.design">{{ item.name.last }}</a>
-          </ng-template>
-        </nz-list-item-meta>
-      </nz-skeleton>
-    </nz-list-item>
-  </ng-template>
-  <ng-template #loadMore>
-    <div class="loadmore">
-      <button nz-button *ngIf="!loadingMore" (click)="onLoadMore()">loading more</button>
-    </div>
-  </ng-template>
-</nz-list>
+<nz-table #expandTable [nzData]="listData">
+  <thead>
+    <tr>
+      <th nzWidth="50px"></th>
+      <th>评价</th>
+      <th>评价星数</th>
+      <th>房间</th>
+      <th>订单</th>
+      <th>内容</th>
+      <th nzAlign="center">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let data of expandTable.data">
+      <ng-container *ngFor="let item of mapOfExpandedData[data.id]">
+        <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
+          <td
+            [nzIndentSize]="item.level * 20"
+            [nzShowExpand]="item.children.length > 0"
+            [(nzExpand)]="item.expand"
+            (nzExpandChange)="collapse(mapOfExpandedData[data.id], item, $event)"
+          ></td>
+          <td>
+            <div *ngIf="item.level === 0">
+              <nz-tag nzColor="success" *ngIf="item.startCount > 3">好评</nz-tag>
+              <nz-tag nzColor="error" *ngIf="item.startCount <= 3">差评</nz-tag>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="item.level === 0">
+              <nz-rate [nzDisabled]="true" [ngModel]="item.startCount"></nz-rate>
+            </div>
+          </td>
+          <td>{{ item.room_Id }}</td>
+          <td>
+            {{ item.order_Id }}
+          </td>
+          <td>
+            {{ item.content }}
+          </td>
+          <td nzAlign="center">
+            <a *ngIf="item.level === 0" (click)="businessReply(item)">商家回复</a>
+            <nz-divider nzType="vertical" *ngIf="item.level === 0"></nz-divider>
+            <a>编辑</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a>查看</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a nz-popconfirm nzPopconfirmPlacement="bottom" nzPopconfirmTitle="是否要删除该条评论" (nzOnConfirm)="delete(item.id)">
+              删除
+            </a>
+          </td>
+        </tr>
+      </ng-container>
+    </ng-container>
+  </tbody>
+</nz-table>
+<app-comment-detail #commentDetail (notification)="loadData()"></app-comment-detail>

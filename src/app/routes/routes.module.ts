@@ -17,10 +17,12 @@ import { userCommentComponent } from './UserComponent/userComment/userComment.co
 import { UserRecommendComponent } from './UserComponent/userRecommend/userRecommend.component';
 import { BookingDetailComponent } from './booking/booking-detail.component';
 import { RoomDetailComponent } from './room/roomdetail.component';
+import { CommentDetailComponent } from './UserComponent/userComment/comment-detail.component';
 
 const COMPONENTS = [
   DashboardComponent,
   userCommentComponent,
+  CommentDetailComponent,
   // passport pages
   UserLoginComponent,
   BookingDetailComponent,
@@ -33,15 +35,11 @@ const COMPONENTS = [
   // single pages
   CallbackComponent,
   UserLockComponent,
-
 ];
 const COMPONENTS_NOROUNT = [];
 
 @NgModule({
   imports: [SharedModule, RouteRoutingModule],
-  declarations: [
-    ...COMPONENTS,
-    ...COMPONENTS_NOROUNT
-  ],
+  declarations: [...COMPONENTS, ...COMPONENTS_NOROUNT],
 })
-export class RoutesModule { }
+export class RoutesModule {}

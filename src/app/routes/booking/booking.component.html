@@ -60,6 +60,7 @@
             <a>查看</a>
             <nz-divider nzType="vertical"></nz-divider>
             <a *ngIf="data.status"><a nz-popconfirm nzPopconfirmTitle="确定结束吗?" (nzOnConfirm)="endOrder(data.id)">结束订单</a></a>
+            <a *ngIf="!data.status" (click)="addComment(data)">评价</a>
           </td>
         </tr>
       </tbody>
@@ -67,3 +68,4 @@
   </as-split-area>
 </as-split>
 <app-booking-detail #bookingDetail (notification)="load()"></app-booking-detail>
+<app-comment-detail #commentDetail></app-comment-detail>

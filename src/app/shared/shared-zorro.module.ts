@@ -27,6 +27,8 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzCommentModule } from 'ng-zorro-antd/comment';
+import { NzRateModule } from 'ng-zorro-antd/rate';
 export const SHARED_ZORRO_MODULES = [
   NzFormModule,
   NzGridModule,
@@ -57,4 +59,6 @@ export const SHARED_ZORRO_MODULES = [
   NzCheckboxModule,
   NzAutocompleteModule,
   NzTagModule,
+  NzCommentModule,
+  NzRateModule,
 ];

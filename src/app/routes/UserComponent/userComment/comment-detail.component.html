@@ -1,0 +1,25 @@
+<nz-modal [(nzVisible)]="isVisible" nzTitle="评论详情" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+  <form #form="ngForm" nz-form>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>评论</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <textarea
+          rows="4"
+          nz-input
+          [(ngModel)]="paramsItem.content"
+          placeholder="请填写"
+          name="content"
+          #content="ngModel"
+          required
+          [readOnly]="isWatch"
+        ></textarea>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="!isBusiness">
+      <nz-form-label [nzSpan]="7" nzRequired>星数</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <nz-rate [(ngModel)]="paramsItem.startCount" name="startCount" #startCount="ngModel" required [nzDisabled]="isWatch"></nz-rate>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>

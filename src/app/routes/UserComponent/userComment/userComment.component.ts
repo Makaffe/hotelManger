@@ -1,58 +1,85 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
-
-const count = 5;
-const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
+import { UserCommentDTO } from '../model/UserCommentDTO';
+import { UserCommentService } from '../service/UserCommentService';
+import { CommentDetailComponent } from './comment-detail.component';
 
 @Component({
-    selector: 'app-userComment',
-    templateUrl: './userComment.component.html',
-    styles: [
-        `
-          .demo-loadmore-list {
-            min-height: 350px;
-          }
-          .loadmore {
-            text-align: center;
-            margin-top: 12px;
-            height: 32px;
-            line-height: 32px;
-          }
-        `
-    ]
+  selector: 'app-user-Comment',
+  templateUrl: './userComment.component.html',
 })
+// tslint:disable-next-line:class-name
 export class userCommentComponent implements OnInit {
-    initLoading = true; // bug
-    loadingMore = false;
-    data: any[] = [];
-    list: Array<{ loading: boolean; name: any }> = [];
+  @ViewChild('commentDetail', { static: false })
+  commentDetailComponent: CommentDetailComponent;
+  listData = [];
 
-    constructor(private http: HttpClient, private msg: NzMessageService) { }
+  // 树形表格
+  mapOfExpandedData: { [id: string]: any[] } = {};
 
-    ngOnInit(): void {
-        this.getData((res: any) => {
-            this.data = res.results;
-            this.list = res.results;
-            this.initLoading = false;
+  collapse(array: any[], data: any, $event: boolean): void {
+    if ($event === false) {
+      if (data.children) {
+        data.children.forEach((d) => {
+          // tslint:disable-next-line:no-non-null-assertion
+          const target = array.find((a) => a.id === d.id)!;
+          target.expand = false;
+          this.collapse(array, target, false);
         });
+      } else {
+        return;
+      }
+    }
+  }
+
+  convertTreeToList(root: any): any[] {
+    const stack: any[] = [];
+    const array: any[] = [];
+    const hashMap = {};
+    stack.push({ ...root, level: 0, expand: false });
+
+    while (stack.length !== 0) {
+      // tslint:disable-next-line:no-non-null-assertion
+      const node = stack.pop()!;
+      this.visitNode(node, hashMap, array);
+      if (node.children) {
+        for (let i = node.children.length - 1; i >= 0; i--) {
+          // tslint:disable-next-line:no-non-null-assertion
+          stack.push({ ...node.children[i], level: node.level! + 1, expand: false, parent: node });
+        }
+      }
     }
 
-    getData(callback: (res: any) => void): void {
-        this.http.get(fakeDataUrl).subscribe((res: any) => callback(res));
-    }
+    return array;
+  }
 
-    onLoadMore(): void {
-        this.loadingMore = true;
-        this.list = this.data.concat([...Array(count)].fill({}).map(() => ({ loading: true, name: {} })));
-        this.http.get(fakeDataUrl).subscribe((res: any) => {
-            this.data = this.data.concat(res.results);
-            this.list = [...this.data];
-            this.loadingMore = false;
-        });
+  visitNode(node: any, hashMap: { [id: string]: boolean }, array: any[]): void {
+    if (!hashMap[node.id]) {
+      hashMap[node.id] = true;
+      array.push(node);
     }
+  }
 
-    edit(item: any): void {
-        this.msg.success(item.email);
-    }
+  delete(id: string) {}
+
+  businessReply(item: any) {
+    this.commentDetailComponent.addComment(item);
+  }
+
+  constructor(private userCommentService: UserCommentService, private msg: NzMessageService) {}
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData(): void {
+    this.userCommentService.findAll().subscribe((data) => {
+      this.listData = data;
+      this.listData.forEach((item) => {
+        this.mapOfExpandedData[item.id] = this.convertTreeToList(item);
+      });
+
+      this.msg.success('读取成功');
+    });
+  }
 }

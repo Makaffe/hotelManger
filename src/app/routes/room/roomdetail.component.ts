@@ -108,7 +108,7 @@ export class RoomDetailComponent implements OnInit {
     }
     this.roomService.create(this.paramsItem).subscribe((data) => {
       this.notification.emit();
-      this.msg.success('新建成功');
+      this.msg.success('修改成功');
       this.handleCancel();
     });
   }
