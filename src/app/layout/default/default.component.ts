@@ -12,6 +12,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, RouteConfigLoadEnd, RouteConfigLoadStart, Router } from '@angular/router';
+import { CacheService } from '@delon/cache';
 import { SettingsService, _HttpClient } from '@delon/theme';
 import { updateHostClass } from '@delon/util';
 import { environment } from '@env/environment';
@@ -26,9 +27,11 @@ import { SettingDrawerComponent } from './setting-drawer/setting-drawer.componen
   templateUrl: './default.component.html',
 })
 export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy {
+  /**
+   * 用户类型
+   */
+  role = this.cacheService.get('__user', { mode: 'none' }).userType;
 
-  //判断身份登录
-  role: string;
   private unsubscribe$ = new Subject<void>();
   @ViewChild('settingHost', { read: ViewContainerRef, static: true })
   private settingHost: ViewContainerRef;
@@ -37,6 +40,7 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
   constructor(
     public http: _HttpClient,
     router: Router,
+    private cacheService: CacheService,
     msgSrv: NzMessageService,
     private resolver: ComponentFactoryResolver,
     private settings: SettingsService,
@@ -90,14 +94,6 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnInit() {
-    this.http
-      .get('/login/account?_allow_anonymous=true').subscribe(data => {
-        if (data.userName !== 'admin') {
-          this.role = data.userName;
-        } else {
-          this.role = "admin";
-        }
-      })
     const { settings, unsubscribe$ } = this;
     settings.notify.pipe(takeUntil(unsubscribe$)).subscribe(() => this.setClass());
     this.setClass();

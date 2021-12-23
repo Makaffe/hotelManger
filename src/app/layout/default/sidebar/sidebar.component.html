@@ -12,30 +12,29 @@
       <li nz-menu-item routerLink="/pro/account/settings">{{ 'menu.account.settings' | translate }}</li>
     </ul>
   </nz-dropdown-menu> -->
-  <ul nz-menu *ngIf="role==='admin'" style="margin-top:20px;">
-
-    <li nz-menu-item nzMatchRouter style="text-align: center;">
+  <ul nz-menu *ngIf="role === 'Manager'" style="margin-top: 20px">
+    <li nz-menu-item nzMatchRouter style="text-align: center">
       <a [routerLink]="['/dashboard']">首页</a>
     </li>
-    <li nz-menu-item nzMatchRouter style="text-align: center;">
+    <li nz-menu-item nzMatchRouter style="text-align: center">
       <a [routerLink]="['/booking']">房间预定订单</a>
     </li>
-    <li nz-menu-item nzMatchRouter style="text-align: center;">
+    <li nz-menu-item nzMatchRouter style="text-align: center">
       <a [routerLink]="['/room']">房间管理</a>
     </li>
-    <li nz-menu-item nzMatchRouter style="text-align: center;">
+    <li nz-menu-item nzMatchRouter style="text-align: center">
       <a [routerLink]="['/userComment']">评论管理</a>
     </li>
   </ul>
-  <ul nz-menu *ngIf="role!=='admin'" style="margin-top:20px;">
-    <li nz-menu-item nzMatchRouter style="text-align: center;">
+  <ul nz-menu *ngIf="role !== 'Manager'" style="margin-top: 20px">
+    <li nz-menu-item nzMatchRouter style="text-align: center">
       <a [routerLink]="['/userRecommend']">推荐房型</a>
     </li>
-    <li nz-menu-item nzMatchRouter style="text-align: center;">
+    <li nz-menu-item nzMatchRouter style="text-align: center">
       <a [routerLink]="['/booking']">我的订单</a>
     </li>
 
-    <li nz-menu-item nzMatchRouter style="text-align: center;">
+    <li nz-menu-item nzMatchRouter style="text-align: center">
       <a [routerLink]="['/userComment']">我的评论</a>
     </li>
   </ul>

@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CacheService } from '@delon/cache';
 import { _HttpClient } from '@delon/theme';
 
 import { EChartsOption } from 'echarts';
@@ -11,14 +12,21 @@ import { BookingService } from './service/BookingService';
   templateUrl: './booking.component.html',
 })
 export class BookingComponent implements OnInit {
-  constructor(public http: _HttpClient, private bookingService: BookingService, private msg: NzMessageService) {}
+  constructor(
+    public http: _HttpClient,
+    private bookingService: BookingService,
+    private cacheService: CacheService,
+    private msg: NzMessageService,
+  ) {}
   @ViewChild('bookingDetail', { static: false })
   bookingDetailComponent: BookingDetailComponent;
   @ViewChild('commentDetail', { static: false })
   commentDetailComponent: CommentDetailComponent;
 
   // 判断身份登录
-  role: string;
+  role = this.cacheService.get('__user', { mode: 'none' }).userType;
+  // 筛选用户数据
+  userId = this.cacheService.get('__user', { mode: 'none' }).id;
 
   // 表格读取
   loading = false;
@@ -26,14 +34,6 @@ export class BookingComponent implements OnInit {
   listOfData = [];
 
   ngOnInit(): void {
-    this.http.get('/login/account?_allow_anonymous=true').subscribe((data) => {
-      if (data.userName !== 'admin') {
-        this.role = data.userName;
-      } else {
-        this.role = 'admin';
-      }
-    });
-
     this.load();
   }
   showModal() {
@@ -43,6 +43,9 @@ export class BookingComponent implements OnInit {
   load() {
     this.loading = true;
     this.bookingService.findAll().subscribe((data) => {
+      if (this.role === 'User') {
+        data = data.filter((row) => row.user_Id === this.userId);
+      }
       this.listOfData = data;
       this.loading = false;
     });

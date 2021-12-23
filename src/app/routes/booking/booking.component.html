@@ -25,7 +25,7 @@
   </as-split-area>
 
   <as-split-area>
-    <button nz-button nzType="primary" *ngIf="role === 'admin'" (click)="showModal()">新增订单信息</button>
+    <button nz-button nzType="primary" *ngIf="role === 'Manager'" (click)="showModal()">新增订单信息</button>
     <nz-table #basicTable [nzData]="listOfData" [nzScroll]="{ y: '100%' }" [nzLoading]="loading">
       <thead>
         <tr>

@@ -156,7 +156,7 @@ export class BookingDetailComponent implements OnInit {
 
   loadUser() {
     this.userService.findAll().subscribe((data) => {
-      this.users = data;
+      this.users = data.filter((row) => row.userType === 'User');
     });
   }
 

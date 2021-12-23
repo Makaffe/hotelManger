@@ -2,13 +2,12 @@
 <form nz-form [formGroup]="form" (ngSubmit)="submit()" role="form">
   <nz-alert *ngIf="error" [nzType]="'error'" [nzMessage]="error" [nzShowIcon]="true" class="mb-lg"></nz-alert>
   <nz-form-item>
-    <nz-form-control [nzErrorTip]="mailErrorTip">
+    <nz-form-control [nzErrorTip]="usernameErrorTip">
       <nz-input-group nzSize="large" nzAddonBeforeIcon="user">
-        <input nz-input formControlName="mail" placeholder="Email" />
+        <input nz-input formControlName="username" placeholder="username" />
       </nz-input-group>
-      <ng-template #mailErrorTip let-i>
-        <ng-container *ngIf="i.errors?.required">{{ 'validation.email.required' | translate }}</ng-container>
-        <ng-container *ngIf="i.errors?.email">{{ 'validation.email.wrong-format' | translate }}</ng-container>
+      <ng-template #usernameErrorTip let-i>
+        <ng-container *ngIf="i.errors?.required">请输入账号</ng-container>
       </ng-template>
     </nz-form-control>
   </nz-form-item>
@@ -28,7 +27,7 @@
         <input nz-input type="password" formControlName="password" placeholder="Password" />
       </nz-input-group>
       <ng-template #pwdCdkTpl>
-        <div style="padding: 4px 0;">
+        <div style="padding: 4px 0">
           <ng-container [ngSwitch]="status">
             <div *ngSwitchCase="'ok'" class="success">{{ 'validation.password.strength.strong' | translate }}</div>
             <div *ngSwitchCase="'pass'" class="warning">{{ 'validation.password.strength.medium' | translate }}</div>
@@ -59,36 +58,45 @@
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-control [nzErrorTip]="mobileErrorTip">
+    <nz-form-control [nzErrorTip]="phoneErrorTip">
       <nz-input-group nzSize="large" [nzAddOnBefore]="addOnBeforeTemplate">
         <ng-template #addOnBeforeTemplate>
-          <nz-select formControlName="mobilePrefix" style="width: 100px;">
+          <nz-select formControlName="phonePrefix" style="width: 100px">
             <nz-option [nzLabel]="'+86'" [nzValue]="'+86'"></nz-option>
-            <nz-option [nzLabel]="'+87'" [nzValue]="'+87'"></nz-option>
           </nz-select>
         </ng-template>
-        <input formControlName="mobile" nz-input placeholder="Phone number" />
+        <input formControlName="phone" nz-input placeholder="Phone number" />
       </nz-input-group>
-      <ng-template #mobileErrorTip let-i>
+      <ng-template #phoneErrorTip let-i>
         <ng-container *ngIf="i.errors?.required">{{ 'validation.phone-number.required' | translate }}</ng-container>
         <ng-container *ngIf="i.errors?.pattern">{{ 'validation.phone-number.wrong-format' | translate }}</ng-container>
       </ng-template>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-control [nzErrorTip]="'validation.verification-code.required' | translate">
-      <nz-row [nzGutter]="8">
-        <nz-col [nzSpan]="16">
-          <nz-input-group nzSize="large" nzAddonBeforeIcon="mail">
-            <input nz-input formControlName="captcha" placeholder="Captcha" />
-          </nz-input-group>
-        </nz-col>
-        <nz-col [nzSpan]="8">
-          <button type="button" nz-button nzSize="large" (click)="getCaptcha()" [disabled]="count > 0" nzBlock [nzLoading]="http.loading">
-            {{ count ? count + 's' : ('app.register.get-verification-code' | translate) }}
-          </button>
-        </nz-col>
-      </nz-row>
+    <nz-form-control [nzErrorTip]="nameErrorTip">
+      <nz-input-group nzSize="large">
+        <input nz-input formControlName="name" placeholder="name" />
+      </nz-input-group>
+      <ng-template #nameErrorTip let-i>
+        <ng-container *ngIf="i.errors?.required">请输入姓名</ng-container>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control [nzErrorTip]="identityErrorTip">
+      <nz-input-group nzSize="large" [nzAddOnBefore]="addOnBeforeTemplate1">
+        <ng-template #addOnBeforeTemplate1>
+          <nz-select formControlName="identityPrefix" style="width: 100px">
+            <nz-option [nzLabel]="'大陆居民'" [nzValue]="'大陆居民'"></nz-option>
+          </nz-select>
+        </ng-template>
+        <input formControlName="identity" nz-input placeholder="identity" />
+      </nz-input-group>
+      <ng-template #identityErrorTip let-i>
+        <ng-container *ngIf="i.errors?.required">身份证不能为空</ng-container>
+        <ng-container *ngIf="i.errors?.strength">身份证格式为18位</ng-container>
+      </ng-template>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>

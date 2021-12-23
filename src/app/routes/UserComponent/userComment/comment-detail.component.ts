@@ -94,7 +94,5 @@ export class CommentDetailComponent implements OnInit {
       parent_Id: item ? item.parent_Id : null,
     };
   }
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
+  ngOnInit(): void {}
 }

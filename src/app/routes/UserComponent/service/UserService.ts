@@ -21,4 +21,14 @@ export class UserService {
 
     return this.http.get<Array<any>>(`${UserService.URL}/all`);
   }
+
+  findUserById(userId: any) {}
+
+  loginCheck(dto?: any): Observable<any> {
+    return this.http.post<any>(`${UserService.URL}/login?_allow_anonymous=true`, dto);
+  }
+
+  registry(dto?: any): Observable<any> {
+    return this.http.post<any>(`${UserService.URL}/add?_allow_anonymous=true`, dto);
+  }
 }

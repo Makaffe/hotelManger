@@ -1,12 +1,15 @@
-import { Component, Inject, OnDestroy, Optional } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, Inject, OnDestroy, OnInit, Optional, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StartupService } from '@core';
 import { ReuseTabService } from '@delon/abc/reuse-tab';
-import { DA_SERVICE_TOKEN, ITokenService, SocialOpenType, SocialService } from '@delon/auth';
+import { DA_SERVICE_TOKEN, ITokenService, SocialOpenType, SocialService, TokenService } from '@delon/auth';
+import { CacheService } from '@delon/cache';
 import { SettingsService, _HttpClient } from '@delon/theme';
 import { environment } from '@env/environment';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { forkJoin } from 'rxjs';
+import { UserService } from '../../UserComponent/service/UserService';
 
 @Component({
   selector: 'passport-login',
@@ -14,176 +17,141 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   styleUrls: ['./login.component.less'],
   providers: [SocialService],
 })
-export class UserLoginComponent implements OnDestroy {
+export class UserLoginComponent implements OnInit {
+  /**
+   * 表单数据
+   */
+  paramsItem = this.initLogin();
+
+  /**
+   * 用户类型列表
+   */
+  userTypeList = [
+    { label: '管理人员', value: 'Manager' },
+    { label: '工作人员', value: 'Worker' },
+    { label: '普通用户', value: 'User' },
+  ];
+
+  /**
+   * 需要缓存的用户信息对象
+   */
+  userInfo = {
+    id: '',
+    username: '',
+    password: '',
+    identity: '',
+    name: '',
+    phone: '',
+    bookingTime: '',
+    userType: '',
+  };
+
+  /**
+   * 记录用户Id
+   */
+  userId = '';
+
+  /**
+   * 登录按钮加载
+   */
+  loginLoading = false;
+
   constructor(
-    fb: FormBuilder,
     private router: Router,
-    private settingsService: SettingsService,
-    private socialService: SocialService,
-    @Optional()
-    @Inject(ReuseTabService)
+    private msg: NzMessageService,
+    private cacheService: CacheService,
+    private starupService: StartupService,
+    private userService: UserService,
     private reuseTabService: ReuseTabService,
-    @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
-    private startupSrv: StartupService,
-    public http: _HttpClient,
-    public msg: NzMessageService,
-  ) {
-    this.form = fb.group({
-      userName: [null, [Validators.required, Validators.pattern(/^(admin|user)$/)]],
-      password: [null, [Validators.required, Validators.pattern(/^(ng\-alain\.com)$/)]],
-      mobile: [null, [Validators.required, Validators.pattern(/^1\d{10}$/)]],
-      captcha: [null, [Validators.required]],
-      remember: [true],
+    @Inject(DA_SERVICE_TOKEN) private tokenService: TokenService,
+  ) {}
+  ngOnInit(): void {}
+
+  initLogin(item?: any) {
+    return {
+      id: item ? item.id : null,
+      username: item ? item.username : null,
+      password: item ? item.password : null,
+      identity: item ? item.identity : null,
+      name: item ? item.name : null,
+      phone: item ? item.phone : null,
+      bookingTime: item ? item.bookingTime : null,
+      userType: item ? item.userType : 'User',
+    };
+  }
+
+  login() {
+    if ((this.paramsItem.userType || this.paramsItem.username || this.paramsItem.password) === null) {
+      this.msg.error('请把带*号的内容填满');
+      return;
+    }
+    this.loginLoading = true;
+    this.userService.loginCheck(this.paramsItem).subscribe((data) => {
+      if (data) {
+        this.msg.success('恭喜您，登陆成功');
+        this.loginLoading = false;
+        this.afterLogin(data);
+      } else {
+        this.msg.error('用户名或密码或身份错误');
+        this.loginLoading = false;
+      }
     });
   }
 
-  // #region fields
-
-  get userName() {
-    return this.form.controls.userName;
-  }
-  get password() {
-    return this.form.controls.password;
-  }
-  get mobile() {
-    return this.form.controls.mobile;
-  }
-  get captcha() {
-    return this.form.controls.captcha;
-  }
-  form: FormGroup;
-  error = '';
-  type = 0;
-
-  // #region get captcha
-
-  count = 0;
-  interval$: any;
-
-  // #endregion
-
-  switch({ index }: { index: number }): void {
-    this.type = index;
+  registry() {
+    this.router.navigateByUrl('/passport/register');
   }
 
-  getCaptcha() {
-    if (this.mobile.invalid) {
-      this.mobile.markAsDirty({ onlySelf: true });
-      this.mobile.updateValueAndValidity({ onlySelf: true });
-      return;
-    }
-    this.count = 59;
-    this.interval$ = setInterval(() => {
-      this.count -= 1;
-      if (this.count <= 0) {
-        clearInterval(this.interval$);
-      }
-    }, 1000);
-  }
+  /**
+   * 登录成功后执行
+   */
+  afterLogin(data: any) {
+    // 记录用户缓存信息
+    this.cacheService.set('__user', data, {});
+    // 清空路由复用信息
+    this.reuseTabService.clear();
 
-  // #endregion
-
-  submit() {
-    this.error = '';
-    if (this.type === 0) {
-      this.userName.markAsDirty();
-      this.userName.updateValueAndValidity();
-      this.password.markAsDirty();
-      this.password.updateValueAndValidity();
-      if (this.userName.invalid || this.password.invalid) {
-        return;
-      }
-    } else {
-      this.mobile.markAsDirty();
-      this.mobile.updateValueAndValidity();
-      this.captcha.markAsDirty();
-      this.captcha.updateValueAndValidity();
-      if (this.mobile.invalid || this.captcha.invalid) {
-        return;
-      }
-    }
-
-    // 默认配置中对所有HTTP请求都会强制 [校验](https://ng-alain.com/auth/getting-started) 用户 Token
-    // 然一般来说登录请求不需要校验，因此可以在请求URL加上：`/login?_allow_anonymous=true` 表示不触发用户 Token 校验
-    this.http
-      .post('/login/account?_allow_anonymous=true', {
-        type: this.type,
-        userName: this.userName.value,
-        password: this.password.value,
-      })
-      .subscribe((res) => {
-        if (res.msg !== 'ok') {
-          this.error = res.msg;
-          return;
-        }
-        // 清空路由复用信息
-        this.reuseTabService.clear();
-        // 设置用户Token信息
-        this.tokenService.set(res.user);
-        // 重新获取 StartupService 内容，我们始终认为应用信息一般都会受当前用户授权范围而影响
-        if (this.userName.value === 'admin') {
-          //管理员登录
-          this.startupSrv.load().then(() => {
-            let url = this.tokenService.referrer.url || '/';
-            // if (url.includes('/passport')) {
-            //   url = '/dashboard';
-            // }
-            this.router.navigateByUrl('/dashboard');
-          });
-        } else {
-          // 普通用户登录
-          this.router.navigateByUrl('/room');
-        }
+    // 设置用户Token信息
+    this.tokenService.set(data);
+    if (data.userType !== 'User') {
+      this.starupService.load().then(() => {
+        // if (url.includes('/passport')) {
+        //   url = '/dashboard';
+        // }
+        this.router.navigateByUrl('/dashboard');
       });
-  }
-
-  // #region social
-
-  open(type: string, openType: SocialOpenType = 'href') {
-    let url = ``;
-    let callback = ``;
-    // tslint:disable-next-line: prefer-conditional-expression
-    if (environment.production) {
-      callback = 'https://ng-alain.github.io/ng-alain/#/callback/' + type;
     } else {
-      callback = 'http://localhost:4200/#/callback/' + type;
+      this.router.navigateByUrl('/userRecommend');
     }
-    switch (type) {
-      case 'auth0':
-        url = `//cipchk.auth0.com/login?client=8gcNydIDzGBYxzqV0Vm1CX_RXH-wsWo5&redirect_uri=${decodeURIComponent(callback)}`;
-        break;
-      case 'github':
-        url = `//github.com/login/oauth/authorize?client_id=9d6baae4b04a23fcafa2&response_type=code&redirect_uri=${decodeURIComponent(
-          callback,
-        )}`;
-        break;
-      case 'weibo':
-        url = `https://api.weibo.com/oauth2/authorize?client_id=1239507802&response_type=code&redirect_uri=${decodeURIComponent(callback)}`;
-        break;
-    }
-    if (openType === 'window') {
-      this.socialService
-        .login(url, '/', {
-          type: 'window',
-        })
-        .subscribe((res) => {
-          if (res) {
-            this.settingsService.setUser(res);
-            this.router.navigateByUrl('/');
-          }
-        });
-    } else {
-      this.socialService.login(url, '/', {
-        type: 'href',
-      });
-    }
-  }
 
-  // #endregion
+    // 查询当前登录人信息
+    // const user$ = this.userService.findUserById(data.userId);
+    // const user$ = data;
+    // forkJoin([user$]).subscribe(result => {
+    //   if (!result) {
+    //     return;
+    //   }
 
-  ngOnDestroy(): void {
-    if (this.interval$) {
-      clearInterval(this.interval$);
-    }
+    //   // 处理用户信息请求结果
+    //   this.userId = data.id;
+    //   // 缓存用户信息
+
+    //   // 检查用户角色, 角色由后台sql脚本初始化，id需明确（1.系统管理员， 2.审计人员，3.纪检部门，4.整改部门）
+    //   switch (this.paramsItem.userType) {
+    //     case 'Manager':
+    //       this.starupService.load().then(() => this.router.navigate(['/dashboard']));
+    //       break;
+    //     case 'Worker':
+    //       this.starupService.load().then(() => this.router.navigate(['/dashboard']));
+    //       break;
+    //     case 'User':
+    //       this.starupService.load().then(() => this.router.navigate(['/userRecommend']));
+    //       break;
+    //     default:
+    //       break;
+    //   }
+
+    //   //   this.starupService.load().then(() => this.router.navigate(['/navigation']));
+    // });
   }
 }

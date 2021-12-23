@@ -1,23 +1,32 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { UserService } from '../../UserComponent/service/UserService';
 
 @Component({
   selector: 'passport-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.less'],
 })
-export class UserRegisterComponent implements OnDestroy {
-  constructor(fb: FormBuilder, private router: Router, public http: _HttpClient, public msg: NzMessageService) {
+export class UserRegisterComponent implements OnInit {
+  constructor(
+    fb: FormBuilder,
+    private router: Router,
+    private userService: UserService,
+    public http: _HttpClient,
+    public msg: NzMessageService,
+  ) {
     this.form = fb.group({
-      mail: [null, [Validators.required, Validators.email]],
+      username: [null, [Validators.required]],
       password: [null, [Validators.required, Validators.minLength(6), UserRegisterComponent.checkPassword.bind(this)]],
       confirm: [null, [Validators.required, Validators.minLength(6), UserRegisterComponent.passwordEquar]],
-      mobilePrefix: ['+86'],
-      mobile: [null, [Validators.required, Validators.pattern(/^1\d{10}$/)]],
-      captcha: [null, [Validators.required]],
+      phonePrefix: ['+86'],
+      phone: [null, [Validators.required, Validators.pattern(/^1\d{10}$/)]],
+      identityPrefix: ['大陆居民'],
+      identity: [null, [Validators.required, Validators.minLength(18), Validators.maxLength(18)]],
+      name: [null, [Validators.required]],
     });
   }
 
@@ -32,8 +41,14 @@ export class UserRegisterComponent implements OnDestroy {
   get confirm() {
     return this.form.controls.confirm;
   }
-  get mobile() {
-    return this.form.controls.mobile;
+  get phone() {
+    return this.form.controls.phone;
+  }
+  get identity() {
+    return this.form.controls.identity;
+  }
+  get name() {
+    return this.form.controls.name;
   }
   get captcha() {
     return this.form.controls.captcha;
@@ -86,20 +101,20 @@ export class UserRegisterComponent implements OnDestroy {
     return null;
   }
 
-  getCaptcha() {
-    if (this.mobile.invalid) {
-      this.mobile.markAsDirty({ onlySelf: true });
-      this.mobile.updateValueAndValidity({ onlySelf: true });
-      return;
-    }
-    this.count = 59;
-    this.interval$ = setInterval(() => {
-      this.count -= 1;
-      if (this.count <= 0) {
-        clearInterval(this.interval$);
-      }
-    }, 1000);
-  }
+  // getCaptcha() {
+  //   if (this.phone.invalid) {
+  //     this.phone.markAsDirty({ onlySelf: true });
+  //     this.phone.updateValueAndValidity({ onlySelf: true });
+  //     return;
+  //   }
+  //   this.count = 59;
+  //   this.interval$ = setInterval(() => {
+  //     this.count -= 1;
+  //     if (this.count <= 0) {
+  //       clearInterval(this.interval$);
+  //     }
+  //   }, 1000);
+  // }
 
   // #endregion
 
@@ -109,21 +124,16 @@ export class UserRegisterComponent implements OnDestroy {
       this.form.controls[key].markAsDirty();
       this.form.controls[key].updateValueAndValidity();
     });
-    if (this.form.invalid) {
-      return;
-    }
-
-    const data = this.form.value;
-    this.http.post('/register', data).subscribe(() => {
-      this.router.navigateByUrl('/passport/register-result', {
-        queryParams: { email: data.mail },
-      });
+    const userData = this.form.value;
+    // tslint:disable-next-line:no-shadowed-variables
+    this.userService.registry(userData).subscribe((data) => {
+      if (data) {
+        this.msg.success('普通用户注册成功');
+        this.router.navigateByUrl('/passport/login');
+      } else {
+        this.msg.error('请联系管理员');
+      }
     });
   }
-
-  ngOnDestroy(): void {
-    if (this.interval$) {
-      clearInterval(this.interval$);
-    }
-  }
+  ngOnInit(): void {}
 }
