@@ -1,18 +1,24 @@
-<div style="padding: 5px;">
+<div style="padding: 5px">
   <div nz-row>
     <div nz-col nzSpan="12">
-      <nz-card nzTitle="Card title">
-        <div echarts [options]="option" class="demo-chart"></div>
+      <nz-card nzTitle="收入">
+        <div echarts [options]="option" class="demo-chart">
+          <!-- <nz-spin nzSimple [nzSpinning]="Loading" [nzSize]="'large'" nzTip="Loading..."></nz-spin> -->
+        </div>
       </nz-card>
     </div>
     <div nz-col nzSpan="12">
-      <nz-card nzTitle="Card title">
-        <div echarts [options]="option" class="demo-chart"></div>
+      <nz-card nzTitle="好评">
+        <div echarts [options]="likeOption" class="demo-chart">
+          <!-- <nz-spin nzSimple [nzSpinning]="Loading1" [nzSize]="'large'" nzTip="Loading..."></nz-spin> -->
+        </div>
       </nz-card>
     </div>
     <div nz-col nzSpan="24">
-      <nz-card nzTitle="Card title">
-        <div echarts [options]="option1" class="demo-chart"></div>
+      <nz-card nzTitle="金额">
+        <div echarts [options]="option1" class="demo-chart">
+          <!-- <nz-spin nzSimple [nzSpinning]="Loading" [nzSize]="'large'" nzTip="Loading..."></nz-spin> -->
+        </div>
       </nz-card>
     </div>
   </div>

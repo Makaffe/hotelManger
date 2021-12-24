@@ -14,8 +14,7 @@ export class RoomService {
   private static URL = 'http://localhost:8080/room';
 
   /**
-   * 查询所有审计报告数据
-   *
+   * 查询所有房间
    */
   findAll(): Observable<Array<any>> {
     return this.http.get<Array<any>>(`${RoomService.URL}/findAll`);
@@ -34,5 +33,12 @@ export class RoomService {
    */
   delete(id: string): Observable<any> {
     return this.http.delete<any>(`${RoomService.URL}/delete/${id}`);
+  }
+
+  /**
+   * 不生成树形结构的房间查询
+   */
+  findAllByNotTree(): Observable<Array<any>> {
+    return this.http.get<Array<any>>(`${RoomService.URL}/findAllByNotTree`);
   }
 }

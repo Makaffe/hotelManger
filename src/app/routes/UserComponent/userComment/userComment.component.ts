@@ -79,7 +79,7 @@ export class userCommentComponent implements OnInit {
         this.mapOfExpandedData[item.id] = this.convertTreeToList(item);
       });
 
-      this.msg.success('读取成功');
+      // this.msg.success('读取成功');
     });
   }
 }

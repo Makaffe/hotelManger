@@ -21,9 +21,10 @@
             (nzExpandChange)="collapse(mapOfExpandedData[data.id], item, $event)"
           ></td>
           <td>
-            <div *ngIf="item.level === 0">
+            <div>
               <nz-tag nzColor="success" *ngIf="item.startCount > 3">好评</nz-tag>
-              <nz-tag nzColor="error" *ngIf="item.startCount <= 3">差评</nz-tag>
+              <nz-tag nzColor="error" *ngIf="item.startCount <= 3 && !item.parent">差评</nz-tag>
+              <nz-tag [nzColor]="'purple'" *ngIf="item.parent">商家回复</nz-tag>
             </div>
           </td>
           <td>

@@ -1,23 +1,23 @@
-<div style="width: 100%;background-color: white;">
+<div style="width: 100%; background-color: white">
   <nz-divider [nzText]="Title1"></nz-divider>
   <ng-template #Title1>
     <h2>推荐的房型</h2>
   </ng-template>
   <div nz-row nzType="flex" nzJustify="space-between">
-    <div nz-col nzSpan="8" style="padding: 5px;" *ngFor="let item of roomRecommend,let i = index">
-      <div *ngIf="i>=3 === false">
+    <div nz-col nzSpan="6" style="padding: 5px" *ngFor="let item of roomRecommend; let i = index">
+      <nz-card nzHoverable="true" [nzCover]="coverTemplate" [nzActions]="[actionBooking, actionDelete]" nzSize="small">
+        <nz-card-meta [nzTitle]="item.Title" [nzDescription]="item.nzDescription"></nz-card-meta>
 
-        <nz-card nzHoverable="true" [nzCover]="coverTemplate" [nzActions]="[actionBooking]" nzSize="small">
-          <nz-card-meta [nzTitle]="item.Title" [nzDescription]="item.nzDescription"></nz-card-meta>
-
-          <ng-template #coverTemplate>
-            <img alt="example" [src]="item.img" />
-          </ng-template>
-          <ng-template #actionBooking>
-            <i nz-icon nzType="edit"></i>
-          </ng-template>
-        </nz-card>
-      </div>
+        <ng-template #coverTemplate>
+          <img alt="example" [src]="item.img" style="height: 201.5px" />
+        </ng-template>
+        <ng-template #actionBooking>
+          <i nz-icon nzType="edit"></i>
+        </ng-template>
+        <ng-template #actionDelete>
+          <i nz-icon nzType="delete"></i>
+        </ng-template>
+      </nz-card>
     </div>
   </div>
   <nz-divider [nzText]="Title2"></nz-divider>
@@ -25,18 +25,17 @@
     <h2>剩余的房型</h2>
   </ng-template>
   <div nz-row nzType="flex" nzJustify="space-between">
-    <div nz-col nzSpan="6" style="padding: 5px;" *ngFor="let item of roomRecommend,let i=index ">
+    <div nz-col nzSpan="6" style="padding: 5px" *ngFor="let item of roomSurplus; let i = index">
       <nz-card nzHoverable="true" [nzCover]="coverTemplate" [nzActions]="[actionBooking]" nzSize="small">
-        <nz-card-meta [nzTitle]="item.Title" [nzDescription]="item.nzDescription"></nz-card-meta>
+        <nz-card-meta [nzTitle]="item.hallName + '/' + item.description" [nzDescription]="'￥' + item.price + '/一天'"> </nz-card-meta>
 
         <ng-template #coverTemplate>
-          <img alt="example" [src]="item.img" />
+          <img alt="example" [src]="item.image" style="height: 201.5px" />
         </ng-template>
         <ng-template #actionBooking>
           <i nz-icon nzType="edit"></i>
         </ng-template>
       </nz-card>
-
     </div>
   </div>
 </div>

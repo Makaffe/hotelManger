@@ -1,27 +1,52 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
+import { CacheService } from '@delon/cache';
+import { RoomService } from '../../room/service/RoomService';
+import { UserRecommendService } from '../service/UserRecommend';
 
 @Component({
-    selector: 'app-userRecommend',
-    templateUrl: './userRecommend.component.html',
+  selector: 'app-userRecommend',
+  templateUrl: './userRecommend.component.html',
 })
 export class UserRecommendComponent implements OnInit {
-    roomRecommend = [{
-        Title: 'Europe Street beat',
-        nzDescription: '尊贵双人房',
-        img: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg1.qunarzz.com%2Ftravel%2Fd8%2F1704%2F1d%2Fb13dbdc4a1faf7b5.jpg_r_720x480x95_2c9d09fc.jpg&refer=http%3A%2F%2Fimg1.qunarzz.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1641228055&t=ef37b3a41492b6aa8c84672cdd15cca8",
-    }, {
-        Title: 'Europe Street beat',
-        nzDescription: '尊贵双人房',
-        img: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg1.qunarzz.com%2Ftravel%2Fd8%2F1704%2F1d%2Fb13dbdc4a1faf7b5.jpg_r_720x480x95_2c9d09fc.jpg&refer=http%3A%2F%2Fimg1.qunarzz.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1641228055&t=ef37b3a41492b6aa8c84672cdd15cca8",
-    }, {
-        Title: 'Europe Street beat',
-        nzDescription: '尊贵双人房',
-        img: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg1.qunarzz.com%2Ftravel%2Fd8%2F1704%2F1d%2Fb13dbdc4a1faf7b5.jpg_r_720x480x95_2c9d09fc.jpg&refer=http%3A%2F%2Fimg1.qunarzz.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1641228055&t=ef37b3a41492b6aa8c84672cdd15cca8",
-    }, {
-        Title: 'Europe Street beat',
-        nzDescription: '尊贵双人房',
-        img: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg1.qunarzz.com%2Ftravel%2Fd8%2F1704%2F1d%2Fb13dbdc4a1faf7b5.jpg_r_720x480x95_2c9d09fc.jpg&refer=http%3A%2F%2Fimg1.qunarzz.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1641228055&t=ef37b3a41492b6aa8c84672cdd15cca8",
-    }]
-    ngOnInit(): void {
-    }
+  // 推荐房间
+  roomRecommend = [];
+
+  // 剩余房间
+  roomSurplus = [];
+
+  // 筛选用户数据
+  userId = this.cacheService.get('__user', { mode: 'none' }).id;
+
+  constructor(private userRecommendService: UserRecommendService, private roomService: RoomService, private cacheService: CacheService) {}
+
+  ngOnInit(): void {
+    this.loadRecommend();
+    this.loadSurplus();
+  }
+  loadSurplus() {
+    this.roomService.findAllByNotTree().subscribe((data) => {
+      this.roomSurplus = data.filter((row) => row.status === true && row.parent_Id !== null);
+    });
+  }
+
+  loadRecommend() {
+    this.userRecommendService.findAll().subscribe((data) => {
+      const listData1 = data;
+
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < listData1.length; i++) {
+        if (listData1[i][1] !== this.userId) {
+          continue;
+        }
+        const totalData = {
+          Title: listData1[i][4] + '/' + listData1[i][3],
+          img: listData1[i][5],
+          nzDescription: '￥' + listData1[i][6] + '/一天',
+        };
+        this.roomRecommend.push(totalData);
+      }
+    });
+
+    console.log(this.roomRecommend);
+  }
 }
