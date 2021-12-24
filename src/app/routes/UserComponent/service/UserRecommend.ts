@@ -21,4 +21,12 @@ export class UserRecommendService {
 
     return this.http.get<Array<any>>(`${UserRecommendService.URL}/findRecommend`);
   }
+
+  addRecommend(dto?: any): Observable<any> {
+    return this.http.post<any>(`${UserRecommendService.URL}/add`, dto);
+  }
+
+  deleteRecommend(id: string): Observable<any> {
+    return this.http.delete<any>(`${UserRecommendService.URL}/delete/${id}`);
+  }
 }

@@ -64,11 +64,13 @@ export class BookingDetailComponent implements OnInit {
    */
   organizationTreeMap: Map<string, string> = new Map<string, string>();
 
-  showModal(): void {
+  showModal(item?: BookingDTO): void {
+    this.paramsItem = this.initBooking(item);
     this.isVisible = true;
   }
 
   handleOk(): void {
+    this.paramsItem.id = null;
     if (
       this.paramsItem.room_Id === null ||
       this.paramsItem.user_Id === null ||

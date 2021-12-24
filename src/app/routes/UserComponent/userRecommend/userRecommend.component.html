@@ -12,10 +12,10 @@
           <img alt="example" [src]="item.img" style="height: 201.5px" />
         </ng-template>
         <ng-template #actionBooking>
-          <i nz-icon nzType="edit"></i>
+          <i nz-icon nzType="edit" (click)="bookingRecommendRoom(item)"></i>
         </ng-template>
         <ng-template #actionDelete>
-          <i nz-icon nzType="delete"></i>
+          <i nz-icon nzType="delete" (click)="dislike(item.recommendId)"></i>
         </ng-template>
       </nz-card>
     </div>
@@ -26,16 +26,20 @@
   </ng-template>
   <div nz-row nzType="flex" nzJustify="space-between">
     <div nz-col nzSpan="6" style="padding: 5px" *ngFor="let item of roomSurplus; let i = index">
-      <nz-card nzHoverable="true" [nzCover]="coverTemplate" [nzActions]="[actionBooking]" nzSize="small">
+      <nz-card nzHoverable="true" [nzCover]="coverTemplate" [nzActions]="[actionBooking, actionLike]" nzSize="small">
         <nz-card-meta [nzTitle]="item.hallName + '/' + item.description" [nzDescription]="'￥' + item.price + '/一天'"> </nz-card-meta>
 
         <ng-template #coverTemplate>
           <img alt="example" [src]="item.image" style="height: 201.5px" />
         </ng-template>
         <ng-template #actionBooking>
-          <i nz-icon nzType="edit"></i>
+          <i nz-icon nzType="edit" (click)="bookingSurplusRoom(item)"></i>
+        </ng-template>
+        <ng-template #actionLike>
+          <i nz-icon nzType="like" (click)="addRecommend(item.id)"></i>
         </ng-template>
       </nz-card>
     </div>
   </div>
 </div>
+<app-booking-detail #bookingDetail (notification)="load()"></app-booking-detail>
