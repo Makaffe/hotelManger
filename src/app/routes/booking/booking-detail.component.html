@@ -7,7 +7,7 @@
           [nzAllowClear]="false"
           [nzOptions]="roomOptions"
           name="roomId"
-          [(ngModel)]="paramsItem.room_Id"
+          [(ngModel)]="room_Id"
           (ngModelChange)="chooseRoom($event)"
         ></nz-cascader>
         <ng-template #roomErrorTpl let-control>

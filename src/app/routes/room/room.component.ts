@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { CacheService } from '@delon/cache';
 import { _HttpClient } from '@delon/theme';
 import { NzFormatEmitEvent, NzMessageService } from 'ng-zorro-antd';
 import { RoomDTO } from './model/RoomDTO';
@@ -13,6 +15,8 @@ export class RoomComponent implements OnInit {
   @ViewChild('roomDetail', { static: false })
   roomDetailComponent: RoomDetailComponent;
   listData = [];
+
+  userType = this.cacheService.get('__user', { mode: 'none' }).userType;
 
   // 树形表格
   mapOfExpandedData: { [id: string]: any[] } = {};
@@ -63,9 +67,19 @@ export class RoomComponent implements OnInit {
   showModal() {
     this.roomDetailComponent.addHall();
   }
-  constructor(private msg: NzMessageService, private roomService: RoomService) {}
+  constructor(
+    private router: Router,
+    private msg: NzMessageService,
+    private roomService: RoomService,
+    private cacheService: CacheService,
+  ) {}
 
   ngOnInit(): void {
+    if (this.userType === 'User') {
+      this.msg.error('您没有权限登录,请重新登陆');
+      this.cacheService.clear();
+      this.router.navigateByUrl('/passport/login');
+    }
     this.load();
   }
 

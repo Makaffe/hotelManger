@@ -19,6 +19,7 @@ import { BookingComponent } from './booking/booking.component';
 import { RoomComponent } from './room/room.component';
 import { userCommentComponent } from './UserComponent/userComment/userComment.component';
 import { UserRecommendComponent } from './UserComponent/userRecommend/userRecommend.component';
+import { RoleComponent } from './role/role.component';
 
 const routes: Routes = [
   {
@@ -31,11 +32,12 @@ const routes: Routes = [
       { path: 'booking', component: BookingComponent, data: { title: '房间预定订单' } },
       { path: 'room', component: RoomComponent, data: { title: '房间管理' } },
       { path: 'userComment', component: userCommentComponent, data: { title: '我的评论' } },
-      { path: 'userRecommend', component: UserRecommendComponent, data: { title: '推荐房型' } }
+      { path: 'userRecommend', component: UserRecommendComponent, data: { title: '推荐房型' } },
+      { path: 'role', component: RoleComponent, data: { title: '用户管理' } },
 
       // 业务子模块
       // { path: 'widgets', loadChildren: () => import('./widgets/widgets.module').then(m => m.WidgetsModule) },
-    ]
+    ],
   },
   // 全屏布局
   // {
@@ -53,7 +55,7 @@ const routes: Routes = [
       { path: 'register', component: UserRegisterComponent, data: { title: '注册' } },
       { path: 'register-result', component: UserRegisterResultComponent, data: { title: '注册结果' } },
       { path: 'lock', component: UserLockComponent, data: { title: '锁屏' } },
-    ]
+    ],
   },
   // 单页不包裹Layout
   { path: 'callback/:type', component: CallbackComponent },
@@ -62,14 +64,13 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(
-      routes, {
+    RouterModule.forRoot(routes, {
       useHash: environment.useHash,
       // NOTICE: If you use `reuse-tab` component and turn on keepingScroll you can set to `disabled`
       // Pls refer to https://ng-alain.com/components/reuse-tab
       scrollPositionRestoration: 'top',
-    }
-    )],
+    }),
+  ],
   exports: [RouterModule],
 })
-export class RouteRoutingModule { }
+export class RouteRoutingModule {}

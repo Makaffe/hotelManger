@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CacheService } from '@delon/cache';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UserCommentDTO } from '../model/UserCommentDTO';
 import { UserCommentService } from '../service/UserCommentService';
@@ -14,6 +15,9 @@ export class userCommentComponent implements OnInit {
   @ViewChild('commentDetail', { static: false })
   commentDetailComponent: CommentDetailComponent;
   listData = [];
+
+  // 获取用户身份
+  userType = this.cacheService.get('__user', { mode: 'none' }).userType;
 
   // 树形表格
   mapOfExpandedData: { [id: string]: any[] } = {};
@@ -67,7 +71,7 @@ export class userCommentComponent implements OnInit {
     this.commentDetailComponent.addComment(item);
   }
 
-  constructor(private userCommentService: UserCommentService, private msg: NzMessageService) {}
+  constructor(private userCommentService: UserCommentService, private msg: NzMessageService, private cacheService: CacheService) {}
   ngOnInit(): void {
     this.loadData();
   }

@@ -1,0 +1,70 @@
+<as-split direction="vertical" style="background-color: white">
+  <as-split-area>
+    <form nz-form>
+      <div nz-row [nzGutter]="24" style="margin: 10px">
+        <div nz-col>
+          <nz-form-item>
+            <nz-form-label nzSpan="2">用户名</nz-form-label>
+            <nz-form-control nzSpan="7">
+              <input nz-input />
+            </nz-form-control>
+            <nz-form-label nzSpan="2">姓名</nz-form-label>
+            <nz-form-control nzspan="7">
+              <input nz-input />
+            </nz-form-control>
+            <nz-form-label nzSpan="2">电话号</nz-form-label>
+            <nz-form-control nzSpan="7">
+              <input nz-input />
+            </nz-form-control>
+            <nz-form-label nzSpan="2">角色身份</nz-form-label>
+            <nz-form-control nzSpan="7">
+              <input nz-input />
+            </nz-form-control>
+            <button nz-button nzType="primary" style="margin-left: 200px">查询</button>
+            <button nz-button nzType="default">清空</button>
+          </nz-form-item>
+        </div>
+      </div>
+    </form>
+  </as-split-area>
+
+  <as-split-area>
+    <button nz-button nzType="primary" *ngIf="userType === 'Manager'" (click)="showModal(false)">新增工作人员信息</button>
+    <nz-table #basicTable [nzData]="listOfData" [nzScroll]="{ y: '100%' }" [nzLoading]="loading">
+      <thead>
+        <tr>
+          <th nzWidth="50px">序号</th>
+          <th nzWidth="50px">Id</th>
+          <th>用户名</th>
+          <th>用户密码</th>
+          <th>角色身份</th>
+          <th>姓名</th>
+          <th>身份证</th>
+          <th>手机号</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ data.id }}</td>
+          <td>{{ data.username }}</td>
+          <td>{{ data.password }}</td>
+          <td>{{ data.userType }}</td>
+          <td>{{ data.name }}</td>
+          <td>{{ data.identity }}</td>
+          <td>{{ data.phone }}</td>
+
+          <td>
+            <a (click)="showModal(true, data)">查看</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="showModal(false, data)">编辑</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a><a nz-popconfirm nzPopconfirmTitle="确定结束吗?" (nzOnConfirm)="deleteUser(data.id)">删除用户</a></a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </as-split-area>
+</as-split>
+<app-role-detail #roleDetailComponent (notification)="load()"></app-role-detail>

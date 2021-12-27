@@ -18,11 +18,15 @@ import { UserRecommendComponent } from './UserComponent/userRecommend/userRecomm
 import { BookingDetailComponent } from './booking/booking-detail.component';
 import { RoomDetailComponent } from './room/roomdetail.component';
 import { CommentDetailComponent } from './UserComponent/userComment/comment-detail.component';
+import { RoleComponent } from './role/role.component';
+import { RoleDetailComponent } from './role/role-detail.component';
 
 const COMPONENTS = [
+  RoleComponent,
   DashboardComponent,
   userCommentComponent,
   CommentDetailComponent,
+  RoleDetailComponent,
   // passport pages
   UserLoginComponent,
   BookingDetailComponent,

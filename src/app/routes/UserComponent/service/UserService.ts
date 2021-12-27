@@ -31,4 +31,16 @@ export class UserService {
   registry(dto?: any): Observable<any> {
     return this.http.post<any>(`${UserService.URL}/add?_allow_anonymous=true`, dto);
   }
+
+  create(dto?: any): Observable<any> {
+    return this.http.post<any>(`${UserService.URL}/add`, dto);
+  }
+
+  update(id: string, dto?: any): Observable<any> {
+    return this.http.post<any>(`${UserService.URL}/update/${id}`, dto);
+  }
+
+  delete(id?: string): Observable<any> {
+    return this.http.delete<any>(`${UserService.URL}/delete/${id}`);
+  }
 }

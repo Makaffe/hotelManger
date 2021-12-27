@@ -1,0 +1,117 @@
+<nz-modal [(nzVisible)]="isVisible" nzTitle="角色详情" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+  <form #form="ngForm" nz-form>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>用户名</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="usernameErrorTpl">
+        <input
+          nz-input
+          autocomplete="off"
+          name="username"
+          [(ngModel)]="paramsItem.username"
+          placeholder="请填写"
+          #username="ngModel"
+          required
+          maxlength="255"
+          [readOnly]="isWatch"
+        />
+        <ng-template #usernameErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')"> Please input your username! </ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>密码</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="passwordErrorTpl">
+        <input
+          nz-input
+          autocomplete="off"
+          name="password"
+          [(ngModel)]="paramsItem.password"
+          placeholder="请填写"
+          #password="ngModel"
+          required
+          maxlength="255"
+          [readOnly]="isWatch"
+        />
+        <ng-template #passwordErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')"> Please input your password! </ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>姓名</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="nameErrorTpl">
+        <input
+          nz-input
+          autocomplete="off"
+          name="name"
+          [(ngModel)]="paramsItem.name"
+          placeholder="请填写"
+          #name="ngModel"
+          required
+          maxlength="255"
+          [readOnly]="isWatch"
+        />
+        <ng-template #nameErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')"> Please input your password! </ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>身份证</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="identityErrorTpl">
+        <input
+          nz-input
+          autocomplete="off"
+          name="identity"
+          [(ngModel)]="paramsItem.identity"
+          placeholder="请填写"
+          #identity="ngModel"
+          required
+          maxlength="255"
+          [readOnly]="isWatch"
+        />
+        <ng-template #identityErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')"> Please input your password! </ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>电话</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="phoneErrorTpl">
+        <input
+          nz-input
+          autocomplete="off"
+          name="phone"
+          [(ngModel)]="paramsItem.phone"
+          placeholder="请填写"
+          #phone="ngModel"
+          required
+          maxlength="255"
+          [readOnly]="isWatch"
+        />
+        <ng-template #phoneErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')"> Please input your password! </ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>角色身份</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="roleErrorTpl">
+        <nz-select
+          [nzDisabled]="isWatch"
+          [nzAllowClear]="false"
+          nzShowSearch
+          nzPlaceHolder="请选择"
+          name="userId"
+          [(ngModel)]="paramsItem.userType"
+        >
+          <nz-option *ngFor="let option of roles" [nzLabel]="option.name" [nzValue]="option.value"></nz-option>
+        </nz-select>
+        <ng-template #roleErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')"> Please input your password! </ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>

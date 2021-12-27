@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CacheService } from '@delon/cache';
 import { _HttpClient } from '@delon/theme';
 
 import { EChartsOption } from 'echarts';
+import { NzMessageService } from 'ng-zorro-antd';
 import { TotalService } from './service/TotalService';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit {
+  userType = this.cacheService.get('__user', { mode: 'none' }).userType;
   /**
    * echart读取
    */
@@ -44,9 +48,20 @@ export class DashboardComponent implements OnInit {
       },
     ],
   };
-  constructor(private http: _HttpClient, private totalService: TotalService) {}
+  constructor(
+    private http: _HttpClient,
+    private totalService: TotalService,
+    private msg: NzMessageService,
+    private cacheService: CacheService,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
+    if (this.userType === 'User') {
+      this.msg.error('您没有权限登录,请重新登陆');
+      this.cacheService.clear();
+      this.router.navigateByUrl('/passport/login');
+    }
     this.loadOptionData();
     this.loadOptionData1();
   }
@@ -58,6 +73,9 @@ export class DashboardComponent implements OnInit {
       const listData = data;
       // tslint:disable-next-line:prefer-for-of
       for (let i = 0; i < listData.length; i++) {
+        if (listData[i][3] === 0) {
+          continue;
+        }
         const totalData = {
           name: listData[i][1] + '/' + listData[i][2],
           value: listData[i][3],

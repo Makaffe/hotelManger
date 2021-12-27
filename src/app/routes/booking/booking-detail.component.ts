@@ -44,6 +44,9 @@ export class BookingDetailComponent implements OnInit {
   // 房间名称
   roomName = '';
 
+  // 房间Id
+  room_Id = '';
+
   // 房间选择值
   roomOptions: any[] | null = null;
 

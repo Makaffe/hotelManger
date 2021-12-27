@@ -90,4 +90,8 @@ export class BookingService {
   findById(id: string): Observable<BookingDTO> {
     return this.http.get<BookingDTO>(`${BookingService.URL}/${id}`);
   }
+
+  findByQuery(dto?: any): Observable<any> {
+    return this.http.post<any>(`${BookingService.URL}/findByQuery`, dto);
+  }
 }

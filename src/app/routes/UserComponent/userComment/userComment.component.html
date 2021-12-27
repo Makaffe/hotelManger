@@ -40,7 +40,7 @@
             {{ item.content }}
           </td>
           <td nzAlign="center">
-            <a *ngIf="item.level === 0" (click)="businessReply(item)">商家回复</a>
+            <a *ngIf="item.level === 0 && userType !== 'User' && item.children.length === 0" (click)="businessReply(item)">商家回复</a>
             <nz-divider nzType="vertical" *ngIf="item.level === 0"></nz-divider>
             <a>编辑</a>
             <nz-divider nzType="vertical"></nz-divider>
