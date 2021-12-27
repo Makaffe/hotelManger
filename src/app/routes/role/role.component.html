@@ -4,24 +4,23 @@
       <div nz-row [nzGutter]="24" style="margin: 10px">
         <div nz-col>
           <nz-form-item>
-            <nz-form-label nzSpan="2">用户名</nz-form-label>
-            <nz-form-control nzSpan="7">
-              <input nz-input />
-            </nz-form-control>
             <nz-form-label nzSpan="2">姓名</nz-form-label>
-            <nz-form-control nzspan="7">
-              <input nz-input />
-            </nz-form-control>
-            <nz-form-label nzSpan="2">电话号</nz-form-label>
             <nz-form-control nzSpan="7">
-              <input nz-input />
+              <input nz-input name="name" [(ngModel)]="searchItem.name" />
             </nz-form-control>
+            <nz-form-label nzSpan="2">手机号</nz-form-label>
+            <nz-form-control nzspan="7">
+              <input nz-input name="phone" [(ngModel)]="searchItem.phone" />
+            </nz-form-control>
+
             <nz-form-label nzSpan="2">角色身份</nz-form-label>
             <nz-form-control nzSpan="7">
-              <input nz-input />
+              <nz-select [nzAllowClear]="false" nzShowSearch nzPlaceHolder="请选择" name="userId" [(ngModel)]="searchItem.role">
+                <nz-option *ngFor="let option of roles" [nzLabel]="option.name" [nzValue]="option.value"></nz-option>
+              </nz-select>
             </nz-form-control>
-            <button nz-button nzType="primary" style="margin-left: 200px">查询</button>
-            <button nz-button nzType="default">清空</button>
+            <button nz-button nzType="primary" style="margin-left: 200px" (click)="search()">查询</button>
+            <button nz-button nzType="default" (click)="clear()">清空</button>
           </nz-form-item>
         </div>
       </div>

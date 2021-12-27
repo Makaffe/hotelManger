@@ -43,4 +43,8 @@ export class UserService {
   delete(id?: string): Observable<any> {
     return this.http.delete<any>(`${UserService.URL}/delete/${id}`);
   }
+
+  findByQuery(dto?: any): Observable<any> {
+    return this.http.post<any>(`${UserService.URL}/findByQuery`, dto);
+  }
 }

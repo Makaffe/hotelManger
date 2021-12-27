@@ -23,6 +23,16 @@ export class RoleComponent implements OnInit {
   // 读取列表
   loading = false;
 
+  // 角色数组
+  roles = [
+    { name: '管理人员', value: 'Manager' },
+    { name: '工作人员', value: 'Worker' },
+    { name: '普通用户', value: 'User' },
+  ];
+
+  // 查询参数
+  searchItem = this.searchInit();
+
   constructor(
     public http: _HttpClient,
     private userService: UserService,
@@ -56,5 +66,23 @@ export class RoleComponent implements OnInit {
     this.userService.findAll().subscribe((data) => {
       this.listOfData = data;
     });
+  }
+
+  searchInit(item?: any) {
+    return {
+      name: item ? item.name : '',
+      phone: item ? item.phone : '',
+      role: item ? item.role : '',
+    };
+  }
+  search() {
+    this.userService.findByQuery(this.searchItem).subscribe((data) => {
+      this.listOfData = data;
+      this.msg.success('查询成功');
+    });
+  }
+
+  clear() {
+    this.searchItem = this.searchInit();
   }
 }
