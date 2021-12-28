@@ -41,6 +41,17 @@ export class BookingComponent implements OnInit {
   // 用户列表
   users = [];
 
+  /**
+   *
+   * 用户Map
+   */
+  userMap: Map<string, string> = new Map<string, string>();
+
+  /**
+   * 房间Map
+   */
+  roomMap: Map<string, string> = new Map<string, string>();
+
   // 房间Id
   room_Id: string;
 
@@ -130,8 +141,11 @@ export class BookingComponent implements OnInit {
    * 格式成级联选择数据
    */
   fomatCascadeData(data?: Array<any>): Array<any> {
-    data = data.filter((row) => row.id > 0 && row.status === true);
+    data = data.filter((row) => row.id > 0);
     data = [...data];
+    data.forEach((item) => {
+      this.roomMap.set(item.id, item.hallName + '/' + item.roomName);
+    });
     data.forEach((item) => {
       this.organizationTreeMap.set(item.id, item.roomName);
       item.value = item.id;
@@ -149,7 +163,20 @@ export class BookingComponent implements OnInit {
   loadUser() {
     this.userService.findAll().subscribe((data) => {
       this.users = data.filter((row) => row.userType === 'User');
+      data.forEach((item) => {
+        this.userMap.set(item.id, item.name);
+      });
     });
+  }
+
+  /**
+   * 回显
+   */
+  converseUser(id: string) {
+    return this.userMap.get(id);
+  }
+  converseRoom(id: string) {
+    return this.roomMap.get(id);
   }
 
   /**

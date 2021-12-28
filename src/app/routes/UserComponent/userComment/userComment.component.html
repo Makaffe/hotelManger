@@ -4,8 +4,9 @@
       <th nzWidth="50px"></th>
       <th>评价</th>
       <th>评价星数</th>
-      <th>房间</th>
-      <th>订单</th>
+      <th>用户姓名</th>
+      <th>房间名称</th>
+      <th>订单Id</th>
       <th>内容</th>
       <th nzAlign="center">操作</th>
     </tr>
@@ -32,7 +33,8 @@
               <nz-rate [nzDisabled]="true" [ngModel]="item.startCount"></nz-rate>
             </div>
           </td>
-          <td>{{ item.room_Id }}</td>
+          <td>{{ converseUser(data.user_Id) }}</td>
+          <td>{{ converseRoom(data.room_Id) }}</td>
           <td>
             {{ item.order_Id }}
           </td>

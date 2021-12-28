@@ -41,6 +41,7 @@
           name="date"
           [nzFormat]="dateFormat"
           [(ngModel)]="dateRange"
+          [nzDisabledDate]="disabledDate"
           (ngModelChange)="chooseDate($event)"
         >
         </nz-range-picker>

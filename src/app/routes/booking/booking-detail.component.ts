@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NgForm, ValidationErrors, Validators } from '@angular/forms';
 import { _HttpClient } from '@delon/theme';
-
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import { EChartsOption } from 'echarts';
 import { NzMessageService } from 'ng-zorro-antd';
 import { Observable, Observer } from 'rxjs';
@@ -59,6 +59,8 @@ export class BookingDetailComponent implements OnInit {
   // 日期格式化
   dateFormat = 'yyyy-MM-dd';
 
+  // 今天
+  today = new Date();
   // 预约订单初始化函数
   paramsItem = this.initBooking();
 
@@ -83,6 +85,12 @@ export class BookingDetailComponent implements OnInit {
       this.msg.error('请把带*号的信息填完');
       return;
     }
+    const todayStr = this.datepipe.transform(this.today, 'yyyy-MM-dd');
+    if (this.datepipe.transform(this.dateRange[0], 'yyyy-MM-dd') > todayStr) {
+      this.msg.error('开始时间只能选择今天');
+      return;
+    }
+
     this.bookingService.create(this.paramsItem).subscribe((data) => {
       this.notification.emit();
       this.msg.success('新增成功');
@@ -192,4 +200,9 @@ export class BookingDetailComponent implements OnInit {
     });
     return [...data];
   }
+
+  disabledDate = (current: Date): boolean => {
+    // Can not select days before today and today
+    return differenceInCalendarDays(current, this.today) < 0;
+  };
 }

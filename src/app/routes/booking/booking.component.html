@@ -47,8 +47,8 @@
           <th>修改日期</th>
           <th>订单状态</th>
           <th>统计金额</th>
-          <th>用户Id</th>
-          <th>房间Id</th>
+          <th>用户姓名</th>
+          <th>房间名</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -64,8 +64,8 @@
             <nz-tag *ngIf="data.status" [nzColor]="'green'">进行中</nz-tag>
           </td>
           <td>{{ data.totalPrice }}</td>
-          <td>{{ data.user_Id }}</td>
-          <td>{{ data.room_Id }}</td>
+          <td>{{ converseUser(data.user_Id) }}</td>
+          <td>{{ converseRoom(data.room_Id) }}</td>
 
           <td>
             <a>查看</a>
