@@ -44,4 +44,9 @@ export interface BookingDTO {
    * 用戶Id
    */
   user_Id: string;
+
+  /**
+   * 评论状态
+   */
+  commentStatus: string;
 }

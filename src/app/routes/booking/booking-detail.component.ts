@@ -70,6 +70,9 @@ export class BookingDetailComponent implements OnInit {
   organizationTreeMap: Map<string, string> = new Map<string, string>();
 
   showModal(item?: BookingDTO): void {
+    if (item.room_Id != null) {
+      this.room_Id = item.room_Id;
+    }
     this.paramsItem = this.initBooking(item);
     this.isVisible = true;
   }
@@ -150,6 +153,7 @@ export class BookingDetailComponent implements OnInit {
       modifyTime: item ? item.modifyTime : null,
       createTime: item ? item.createTime : null,
       status: item ? item.status : null,
+      commentStatus: item ? item.commentStatus : null,
     };
   }
 
