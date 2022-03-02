@@ -2,8 +2,12 @@
   <div nz-dropdown nzTrigger="click" class="alain-default__aside-user">
     <nz-avatar class="alain-default__aside-user-avatar" [nzSrc]="user.avatar"></nz-avatar>
     <div class="alain-default__aside-user-info">
-      <strong>{{ user.name }}</strong>
-      <p class="mb0">{{ user.email }}</p>
+      <strong>{{ userName }}</strong>
+      <p class="mb0">
+        <nz-tag *ngIf="role === 'Manager'" [nzColor]="'magenta'">管理员</nz-tag>
+        <nz-tag *ngIf="role === 'Worker'" [nzColor]="'green'">工作人员</nz-tag>
+        <nz-tag *ngIf="role === 'User'" [nzColor]="'red'">用户</nz-tag>
+      </p>
     </div>
   </div>
   <!-- <nz-dropdown-menu #userMenu="nzDropdownMenu">

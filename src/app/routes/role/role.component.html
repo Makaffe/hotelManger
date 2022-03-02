@@ -49,7 +49,11 @@
           <td>{{ data.id }}</td>
           <td>{{ data.username }}</td>
           <td>{{ data.password }}</td>
-          <td>{{ data.userType }}</td>
+          <td>
+            <nz-tag *ngIf="data.userType === 'Manager'" [nzColor]="'magenta'">管理员</nz-tag>
+            <nz-tag *ngIf="data.userType === 'Worker'" [nzColor]="'green'">工作人员</nz-tag>
+            <nz-tag *ngIf="data.userType === 'User'" [nzColor]="'red'">用户</nz-tag>
+          </td>
           <td>{{ data.name }}</td>
           <td>{{ data.identity }}</td>
           <td>{{ data.phone }}</td>

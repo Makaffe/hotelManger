@@ -9,6 +9,8 @@ import { SettingsService, User } from '@delon/theme';
 })
 export class SidebarComponent {
   role = this.cacheService.get('__user', { mode: 'none' }).userType;
+  userName = this.cacheService.get('__user', { mode: 'none' }).username;
+
   get user(): User {
     return this.settings.user;
   }

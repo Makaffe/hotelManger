@@ -112,6 +112,8 @@ export class RoleDetailComponent implements OnInit {
       name: item ? item.name : null,
       phone: item ? item.phone : null,
       userType: item ? item.userType : null,
+      bookingTime: item ? item.bookingTime : null,
+      token: item ? item.token : null,
     };
   }
 
