@@ -4,6 +4,7 @@
       <nz-form-label [nzSpan]="7" nzRequired>房间名</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="roomErrorTpl">
         <nz-cascader
+          [nzDisabled]="isWatch"
           [nzAllowClear]="false"
           [nzOptions]="roomOptions"
           name="roomId"
@@ -19,6 +20,7 @@
       <nz-form-label [nzSpan]="7" nzRequired>用户名</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="userErrorTpl">
         <nz-select
+          [nzDisabled]="isWatch"
           [nzAllowClear]="false"
           nzShowSearch
           nzPlaceHolder="请选择"
@@ -33,7 +35,7 @@
         </ng-template>
       </nz-form-control>
     </nz-form-item>
-    <nz-form-item>
+    <nz-form-item *ngIf="!isWatch">
       <nz-form-label [nzSpan]="7" nzRequired>时间段</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="timeErrorTpl">
         <nz-range-picker
@@ -48,6 +50,25 @@
         <ng-template #timeErrorTpl let-control>
           <ng-container *ngIf="control.hasError('required')"> Please choose your time! </ng-container>
         </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item *ngIf="isWatch">
+      <nz-form-label [nzSpan]="7" nzRequired>开始时间</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <input nz-input name="startDate" [(ngModel)]="this.paramsItem.startDate" readonly />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="isWatch">
+      <nz-form-label [nzSpan]="7" nzRequired>结束时间</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <input nz-input name="endDate" [(ngModel)]="this.paramsItem.endDate" readonly />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="isWatch">
+      <nz-form-label [nzSpan]="7" nzRequired>金额</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <input nz-input name="money" [(ngModel)]="this.paramsItem.totalPrice" readonly />
       </nz-form-control>
     </nz-form-item>
   </form>

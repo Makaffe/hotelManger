@@ -29,6 +29,11 @@ export class BookingDetailComponent implements OnInit {
   @Output()
   notification = new EventEmitter<any>();
 
+  /**
+   * 是否查看
+   */
+  isWatch: boolean;
+
   // 表单
   validateForm: FormGroup;
 
@@ -69,8 +74,11 @@ export class BookingDetailComponent implements OnInit {
    */
   organizationTreeMap: Map<string, string> = new Map<string, string>();
 
-  showModal(item?: BookingDTO): void {
-    if (item.room_Id != null) {
+  showModal(item?: BookingDTO, isWatch?: boolean): void {
+    if (isWatch != null) {
+      this.isWatch = isWatch;
+    }
+    if (item && item.room_Id != null) {
       this.room_Id = item.room_Id;
     }
     this.paramsItem = this.initBooking(item);
@@ -103,6 +111,7 @@ export class BookingDetailComponent implements OnInit {
 
   handleCancel(): void {
     this.form.reset('form');
+    this.isWatch = false;
     this.isVisible = false;
   }
 

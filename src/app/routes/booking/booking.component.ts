@@ -204,4 +204,8 @@ export class BookingComponent implements OnInit {
     this.room_Id = '';
     this.searchItem = this.searchInit();
   }
+
+  showDetail(data: any) {
+    this.bookingDetailComponent.showModal(data, true);
+  }
 }

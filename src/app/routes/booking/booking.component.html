@@ -68,7 +68,7 @@
           <td>{{ converseRoom(data.room_Id) }}</td>
 
           <td>
-            <a>查看</a>
+            <a (click)="showDetail(data)">查看</a>
             <nz-divider nzType="vertical"></nz-divider>
             <a *ngIf="data.status"><a nz-popconfirm nzPopconfirmTitle="确定结束吗?" (nzOnConfirm)="endOrder(data.id)">结束订单</a></a>
             <a *ngIf="!data.status && role === 'User' && data.commentStatus" (click)="addComment(data)">评价</a>
