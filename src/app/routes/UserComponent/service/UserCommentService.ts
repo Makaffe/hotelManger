@@ -22,6 +22,15 @@ export class UserCommentService {
     return this.http.post<Array<any>>(`${UserCommentService.URL}/searchAll`);
   }
 
+  // /**
+  //  *
+  //  * @param dto 根据查询条件查数据
+  //  * @returns
+  //  */
+  findByRoomId(dto?: any): Observable<Array<any>> {
+    return this.http.post<Array<any>>(`${UserCommentService.URL}/search`, dto);
+  }
+
   /**
    * 创建评论
    * @param dto 评论dto

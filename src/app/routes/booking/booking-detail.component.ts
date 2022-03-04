@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NgForm, ValidationErrors, Validators } from '@angular/forms';
+import { CacheService } from '@delon/cache';
 import { _HttpClient } from '@delon/theme';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import { EChartsOption } from 'echarts';
@@ -28,6 +29,11 @@ export class BookingDetailComponent implements OnInit {
    */
   @Output()
   notification = new EventEmitter<any>();
+
+  /**
+   * 是否单人
+   */
+  radioValue = 'dan';
 
   /**
    * 是否查看
@@ -74,12 +80,22 @@ export class BookingDetailComponent implements OnInit {
    */
   organizationTreeMap: Map<string, string> = new Map<string, string>();
 
+  /**
+   * 角色身份
+   */
+  userType = this.cacheService.get('__user', { mode: 'none' }).userType;
+
   showModal(item?: BookingDTO, isWatch?: boolean): void {
     if (isWatch != null) {
       this.isWatch = isWatch;
     }
     if (item && item.room_Id != null) {
       this.room_Id = item.room_Id;
+    }
+    if (item && item.temporaryName !== null) {
+      this.radioValue = 'duo';
+    } else {
+      this.radioValue = 'dan';
     }
     this.paramsItem = this.initBooking(item);
     this.isVisible = true;
@@ -111,6 +127,7 @@ export class BookingDetailComponent implements OnInit {
 
   handleCancel(): void {
     this.form.reset('form');
+    this.paramsItem = this.initBooking();
     this.isWatch = false;
     this.isVisible = false;
   }
@@ -163,6 +180,8 @@ export class BookingDetailComponent implements OnInit {
       createTime: item ? item.createTime : null,
       status: item ? item.status : null,
       commentStatus: item ? item.commentStatus : null,
+      temporaryName: item ? item.temporaryName : null,
+      temporaryID: item ? item.temporaryID : null,
     };
   }
 
@@ -170,6 +189,7 @@ export class BookingDetailComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private roomService: RoomService,
+    private cacheService: CacheService,
     private bookingService: BookingService,
     private msg: NzMessageService,
     private datepipe: DatePipe,

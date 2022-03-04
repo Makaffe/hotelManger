@@ -41,4 +41,11 @@ export class RoomService {
   findAllByNotTree(): Observable<Array<any>> {
     return this.http.get<Array<any>>(`${RoomService.URL}/findAllByNotTree`);
   }
+
+  /**
+   * 根据id查询
+   */
+  findById(id: string): Observable<any> {
+    return this.http.get<any>(`${RoomService.URL}/findById/${id}`);
+  }
 }

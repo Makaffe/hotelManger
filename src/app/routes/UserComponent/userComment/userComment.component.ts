@@ -21,6 +21,8 @@ export class userCommentComponent implements OnInit {
   // 获取用户身份
   userType = this.cacheService.get('__user', { mode: 'none' }).userType;
 
+  userId = this.cacheService.get('__user', { mode: 'none' }).id;
+
   // 树形表格
   mapOfExpandedData: { [id: string]: any[] } = {};
 
@@ -98,14 +100,25 @@ export class userCommentComponent implements OnInit {
   }
 
   loadData(): void {
-    this.userCommentService.findAll().subscribe((data) => {
-      this.listData = data;
-      this.listData.forEach((item) => {
-        this.mapOfExpandedData[item.id] = this.convertTreeToList(item);
-      });
+    if (this.userType === 'User') {
+      this.userCommentService.findAll().subscribe((data) => {
+        this.listData = data.filter((row) => row.user_Id === this.userId);
+        this.listData.forEach((item) => {
+          this.mapOfExpandedData[item.id] = this.convertTreeToList(item);
+        });
 
-      // this.msg.success('读取成功');
-    });
+        // this.msg.success('读取成功');
+      });
+    } else {
+      this.userCommentService.findAll().subscribe((data) => {
+        this.listData = data;
+        this.listData.forEach((item) => {
+          this.mapOfExpandedData[item.id] = this.convertTreeToList(item);
+        });
+
+        // this.msg.success('读取成功');
+      });
+    }
   }
 
   loadUser() {

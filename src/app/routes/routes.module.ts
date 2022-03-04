@@ -20,6 +20,7 @@ import { RoomDetailComponent } from './room/roomdetail.component';
 import { CommentDetailComponent } from './UserComponent/userComment/comment-detail.component';
 import { RoleComponent } from './role/role.component';
 import { RoleDetailComponent } from './role/role-detail.component';
+import { RecommendDetailComponent } from './UserComponent/userRecommend/recommendDetail.component';
 
 const COMPONENTS = [
   RoleComponent,
@@ -32,6 +33,7 @@ const COMPONENTS = [
   BookingDetailComponent,
   RoomDetailComponent,
   UserRecommendComponent,
+  RecommendDetailComponent,
   BookingComponent,
   RoomComponent,
   UserRegisterComponent,

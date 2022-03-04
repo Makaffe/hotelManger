@@ -4,7 +4,7 @@
       <nz-form-label [nzSpan]="7" nzRequired>房间名</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="roomErrorTpl">
         <nz-cascader
-          [nzDisabled]="isWatch"
+          [nzDisabled]="isWatch || userType === 'User'"
           [nzAllowClear]="false"
           [nzOptions]="roomOptions"
           name="roomId"
@@ -20,7 +20,7 @@
       <nz-form-label [nzSpan]="7" nzRequired>用户名</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="userErrorTpl">
         <nz-select
-          [nzDisabled]="isWatch"
+          [nzDisabled]="isWatch || userType === 'User'"
           [nzAllowClear]="false"
           nzShowSearch
           nzPlaceHolder="请选择"
@@ -69,6 +69,31 @@
       <nz-form-label [nzSpan]="7" nzRequired>金额</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
         <input nz-input name="money" [(ngModel)]="this.paramsItem.totalPrice" readonly />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>人数选择</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <nz-radio-group [nzDisabled]="isWatch" [(ngModel)]="radioValue" name="radioValue">
+          <label nz-radio nzValue="dan">单人</label>
+          <label nz-radio nzValue="duo">多人</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="radioValue === 'duo' && !isWatch">
+      <p style="color: red">多人信息使用英文逗号隔开,例如：张三,李四</p>
+    </nz-form-item>
+    <nz-form-item *ngIf="radioValue === 'duo'">
+      <nz-form-label [nzSpan]="7" nzRequired>同住姓名</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <input nz-input name="temporaryName" [(ngModel)]="this.paramsItem.temporaryName" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="radioValue === 'duo'">
+      <nz-form-label [nzSpan]="7" nzRequired>同行身份证</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+        <input nz-input name="temporaryID" [(ngModel)]="this.paramsItem.temporaryID" />
       </nz-form-control>
     </nz-form-item>
   </form>

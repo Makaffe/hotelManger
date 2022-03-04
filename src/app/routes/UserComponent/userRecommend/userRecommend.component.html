@@ -9,7 +9,7 @@
         <nz-card-meta [nzTitle]="item.Title" [nzDescription]="item.nzDescription"></nz-card-meta>
 
         <ng-template #coverTemplate>
-          <img alt="example" [src]="item.img" style="height: 201.5px" />
+          <img alt="example" [src]="item.img" (click)="showDetail(item.room_Id)" style="height: 201.5px" />
         </ng-template>
         <ng-template #actionBooking>
           <i nz-icon nzType="edit" (click)="bookingRecommendRoom(item)"></i>
@@ -30,7 +30,7 @@
         <nz-card-meta [nzTitle]="item.hallName + '/' + item.description" [nzDescription]="'￥' + item.price + '/一天'"> </nz-card-meta>
 
         <ng-template #coverTemplate>
-          <img alt="example" [src]="item.image" style="height: 201.5px" />
+          <img alt="example" [src]="item.image" (click)="showDetail(item.id)" style="height: 201.5px" />
         </ng-template>
         <ng-template #actionBooking>
           <i nz-icon nzType="edit" (click)="bookingSurplusRoom(item)"></i>
@@ -43,3 +43,4 @@
   </div>
 </div>
 <app-booking-detail #bookingDetail (notification)="load()"></app-booking-detail>
+<!-- <app-recommendDetail #recommendDetail></app-recommendDetail> -->

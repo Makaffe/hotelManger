@@ -20,6 +20,7 @@ import { RoomComponent } from './room/room.component';
 import { userCommentComponent } from './UserComponent/userComment/userComment.component';
 import { UserRecommendComponent } from './UserComponent/userRecommend/userRecommend.component';
 import { RoleComponent } from './role/role.component';
+import { RecommendDetailComponent } from './UserComponent/userRecommend/recommendDetail.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
       { path: 'room', component: RoomComponent, data: { title: '房间管理' } },
       { path: 'userComment', component: userCommentComponent, data: { title: '我的评论' } },
       { path: 'userRecommend', component: UserRecommendComponent, data: { title: '推荐房型' } },
+      { path: 'recommendDetail/:id', component: RecommendDetailComponent, data: { title: '房型详情' }, runGuardsAndResolvers: 'always' },
       { path: 'role', component: RoleComponent, data: { title: '用户管理' } },
 
       // 业务子模块
@@ -66,6 +68,7 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes, {
       useHash: environment.useHash,
+      onSameUrlNavigation: 'reload',
       // NOTICE: If you use `reuse-tab` component and turn on keepingScroll you can set to `disabled`
       // Pls refer to https://ng-alain.com/components/reuse-tab
       scrollPositionRestoration: 'top',

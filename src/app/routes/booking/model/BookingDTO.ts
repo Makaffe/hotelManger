@@ -49,4 +49,10 @@ export interface BookingDTO {
    * 评论状态
    */
   commentStatus: string;
+
+  /**
+   * 临时人员信息
+   */
+  temporaryName: string;
+  temporaryID: string;
 }

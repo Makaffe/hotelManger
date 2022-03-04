@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { CacheService } from '@delon/cache';
 import { NzMessageService } from 'ng-zorro-antd';
 import { BookingDetailComponent } from '../../booking/booking-detail.component';
 import { RoomService } from '../../room/service/RoomService';
 import { UserRecommendService } from '../service/UserRecommend';
+import { RecommendDetailComponent } from './recommendDetail.component';
 
 @Component({
   selector: 'app-userRecommend',
@@ -12,11 +14,17 @@ import { UserRecommendService } from '../service/UserRecommend';
 export class UserRecommendComponent implements OnInit {
   @ViewChild('bookingDetail', { static: false })
   bookingDetailComponent: BookingDetailComponent;
+
+  @ViewChild('recommendDetail', { static: false })
+  recommendDetailComponent: RecommendDetailComponent;
   // 初始化参数
   paramsItem = this.initParams();
 
   // 推荐房间
   roomRecommend = [];
+
+  // 传递的房间id
+  roomId = null;
 
   // 剩余房间
   roomSurplus = [];
@@ -29,6 +37,7 @@ export class UserRecommendComponent implements OnInit {
     private roomService: RoomService,
     private cacheService: CacheService,
     private msg: NzMessageService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -105,5 +114,18 @@ export class UserRecommendComponent implements OnInit {
   load() {
     this.loadRecommend();
     this.loadSurplus();
+  }
+
+  showDetail(roomId?: string) {
+    // this.recommendDetailComponent.loadData(roomId);
+    // this.router.navigateByUrl(`/recommendDetail/${roomId}`);
+    // this.router.navigate(['/recommendDetail'], {
+    //   queryParams: { refresh: new Date().getTime(), roomId }
+    // });
+    this.router.navigate(['/recommendDetail/${roomId}'], {
+      queryParams: {
+        roomId,
+      },
+    });
   }
 }

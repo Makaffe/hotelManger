@@ -28,6 +28,7 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzCommentModule } from 'ng-zorro-antd/comment';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzRateModule } from 'ng-zorro-antd/rate';
 export const SHARED_ZORRO_MODULES = [
   NzFormModule,
@@ -61,4 +62,5 @@ export const SHARED_ZORRO_MODULES = [
   NzTagModule,
   NzCommentModule,
   NzRateModule,
+  NzDescriptionsModule,
 ];

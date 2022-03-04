@@ -1,0 +1,71 @@
+<as-split direction="vertical" style="background-color: white">
+  <as-split-area>
+    <nz-descriptions [nzTitle]="Title1" nzBordered>
+      <ng-template #Title1>
+        <h2 style="text-align: center">房间详情</h2>
+      </ng-template>
+      <nz-descriptions-item nzTitle="房间名字">{{ converseRoom(roomItem.id) }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="房间楼层">{{ roomItem.hallName }}</nz-descriptions-item>
+      <!-- <nz-descriptions-item nzTitle="是否可住">YES</nz-descriptions-item> -->
+      <nz-descriptions-item nzTitle="价格">
+        {{ roomItem.price + '元/晚' }}
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="是否可住" [nzSpan]="3">
+        <nz-badge *ngIf="roomItem.status" nzStatus="success" nzText="可住"></nz-badge>
+        <nz-badge *ngIf="!roomItem.status" nzStatus="error" nzText="不可住"></nz-badge>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="图片" [nzSpan]="3">
+        <img alt="example" [src]="roomItem.image" style="height: 201.5px" />
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="房间内设">
+        {{ roomItem.description }}
+      </nz-descriptions-item>
+    </nz-descriptions>
+  </as-split-area>
+  <as-split-area>
+    <nz-table #expandTable [nzData]="listData">
+      <thead>
+        <tr>
+          <th nzWidth="50px"></th>
+          <th>评价</th>
+          <th>评价星数</th>
+          <th>用户姓名</th>
+          <th>房间名称</th>
+          <th>内容</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let data of expandTable.data">
+          <ng-container *ngFor="let item of mapOfExpandedData[data.id]">
+            <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
+              <td
+                [nzIndentSize]="item.level * 20"
+                [nzShowExpand]="item.children.length > 0"
+                [(nzExpand)]="item.expand"
+                (nzExpandChange)="collapse(mapOfExpandedData[data.id], item, $event)"
+              ></td>
+              <td>
+                <div>
+                  <nz-tag nzColor="success" *ngIf="item.startCount > 3">好评</nz-tag>
+                  <nz-tag nzColor="error" *ngIf="item.startCount <= 3 && !item.parent">差评</nz-tag>
+                  <nz-tag [nzColor]="'purple'" *ngIf="item.parent">商家回复</nz-tag>
+                </div>
+              </td>
+              <td>
+                <div *ngIf="item.level === 0">
+                  <nz-rate [nzDisabled]="true" [ngModel]="item.startCount"></nz-rate>
+                </div>
+              </td>
+              <td>{{ converseUser(data.user_Id) }}</td>
+              <td>{{ converseRoom(data.room_Id) }}</td>
+
+              <td>
+                {{ item.content }}
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </nz-table>
+  </as-split-area>
+</as-split>
