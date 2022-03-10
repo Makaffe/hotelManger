@@ -33,6 +33,9 @@
     <li nz-menu-item nzMatchRouter style="text-align: center">
       <a [routerLink]="['/role']">角色管理</a>
     </li>
+    <li nz-menu-item nzMatchRouter style="text-align: center">
+      <a [routerLink]="['/message']">消息管理</a>
+    </li>
   </ul>
   <ul nz-menu *ngIf="role === 'User'" style="margin-top: 20px">
     <li nz-menu-item nzMatchRouter style="text-align: center">
@@ -55,6 +58,9 @@
     </li>
     <li nz-menu-item nzMatchRouter style="text-align: center">
       <a [routerLink]="['/userComment']">评论管理</a>
+    </li>
+    <li nz-menu-item nzMatchRouter style="text-align: center">
+      <a [routerLink]="['/message']">消息管理</a>
     </li>
   </ul>
   <sidebar-nav class="d-block py-lg"></sidebar-nav>

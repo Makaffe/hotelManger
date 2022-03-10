@@ -1,0 +1,74 @@
+<as-split direction="vertical" style="background-color: white">
+  <as-split-area>
+    <form nz-form>
+      <div nz-row [nzGutter]="20" style="margin: 10px">
+        <div nz-col [nzSpan]="20">
+          <nz-form-item>
+            <nz-form-label nzSpan="3">状态</nz-form-label>
+            <nz-form-control nzSpan="5">
+              <nz-select [nzAllowClear]="false" nzShowSearch nzPlaceHolder="请选择" name="userId" [(ngModel)]="searchItem.status">
+                <nz-option *ngFor="let option of statusOption" [nzLabel]="option.name" [nzValue]="option.value"> </nz-option>
+              </nz-select>
+            </nz-form-control>
+            <div nz-col [nzSpan]="5">
+              <button nz-button nzType="primary" style="margin-left: 200px" (click)="search()">查询</button>
+            </div>
+          </nz-form-item>
+        </div>
+      </div>
+    </form>
+  </as-split-area>
+
+  <as-split-area>
+    <nz-table #basicTable [nzData]="listOfData" [nzScroll]="{ y: '100%' }" [nzLoading]="loading">
+      <thead>
+        <tr>
+          <th>用户</th>
+          <th>内容</th>
+          <th>状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data; let i = index">
+          <td>{{ converseUser(data.user_Id) }}</td>
+          <td>{{ data.content }}</td>
+          <td>
+            <nz-tag *ngIf="data.status === 'Waiting'" [nzColor]="'magenta'">进行中</nz-tag>
+            <nz-tag *ngIf="data.status === 'Finish'" [nzColor]="'green'">已完成</nz-tag>
+          </td>
+
+          <td>
+            <a (click)="showModal(data)">查看</a>
+            <nz-divider nzType="vertical" *ngIf="data.status === 'Waiting'"></nz-divider>
+            <a *ngIf="data.status === 'Waiting'"
+              ><a nz-popconfirm nzPopconfirmTitle="确定完成吗?" (nzOnConfirm)="finish(data.id)">完成</a></a
+            >
+            <nz-divider nzType="vertical" *ngIf="data.status === 'Finish'"></nz-divider>
+            <a *ngIf="data.status === 'Finish'"><a nz-popconfirm nzPopconfirmTitle="确定删除吗?" (nzOnConfirm)="del(data.id)">删除</a></a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </as-split-area>
+</as-split>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="消息" (nzOnCancel)="handleCancel()" (nzOnOk)="handleCancel()">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="7" nzRequired>内容</nz-form-label>
+    <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+      <textarea readonly rows="4" nz-input [(ngModel)]="messageItem.content"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="7" nzRequired>状态</nz-form-label>
+    <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+      <input readonly nz-input [(ngModel)]="messageItem.status" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="7" nzRequired>用户</nz-form-label>
+    <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
+      <input readonly nz-input [value]="converseUser(userId)" />
+    </nz-form-control>
+  </nz-form-item>
+</nz-modal>

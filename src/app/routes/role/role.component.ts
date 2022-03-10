@@ -17,7 +17,7 @@ export class RoleComponent implements OnInit {
   // 获取用户角色
   userType = this.cacheService.get('__user', { mode: 'none' }).userType;
 
-  // 身份数组
+  // 数据数组
   listOfData = [];
 
   // 读取列表

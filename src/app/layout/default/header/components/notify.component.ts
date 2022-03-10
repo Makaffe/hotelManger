@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { NoticeIconList, NoticeIconSelect, NoticeItem } from '@delon/abc/notice-icon';
+import { CacheService } from '@delon/cache';
 import add from 'date-fns/add';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import parse from 'date-fns/parse';
 import { NzI18nService } from 'ng-zorro-antd/i18n';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { RoomService } from 'src/app/routes/room/service/RoomService';
+import { UserService } from 'src/app/routes/UserComponent/service/UserService';
+import { NotifyService } from './Service/NotifyService';
 
 @Component({
   selector: 'header-notify',
@@ -23,33 +27,55 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderNotifyComponent {
+  /**
+   *
+   * 用户Map
+   */
+  userMap: Map<string, string> = new Map<string, string>();
+
+  /**
+   * 房间Map
+   */
+  roomMap: Map<string, string> = new Map<string, string>();
+
   data: NoticeItem[] = [
     {
-      title: '通知',
+      title: '完成',
       list: [],
-      emptyText: '你已查看所有通知',
+      emptyText: '你没有已完成的工作',
       emptyImage: 'https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg',
-      clearText: '清空通知',
-    },
-    {
-      title: '消息',
-      list: [],
-      emptyText: '您已读完所有消息',
-      emptyImage: 'https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg',
-      clearText: '清空消息',
+      clearText: '清空完成',
     },
     {
       title: '待办',
       list: [],
       emptyText: '你已完成所有待办',
-      emptyImage: 'https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg',
+      emptyImage: 'https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg',
       clearText: '清空待办',
     },
+    // {
+    //   title: '待办',
+    //   list: [],
+    //   emptyText: '你已完成所有待办',
+    //   emptyImage: 'https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg',
+    //   clearText: '清空待办',
+    // },
   ];
-  count = 5;
+  count = 2;
   loading = false;
 
-  constructor(private msg: NzMessageService, private nzI18n: NzI18nService, private cdr: ChangeDetectorRef) {}
+  // 筛选用户数据
+  userId = this.cacheService.get('__user', { mode: 'none' }).id;
+
+  constructor(
+    private msg: NzMessageService,
+    private nzI18n: NzI18nService,
+    private cdr: ChangeDetectorRef,
+    private cacheService: CacheService,
+    private notifyService: NotifyService,
+    private userService: UserService,
+    private roomService: RoomService,
+  ) {}
 
   private updateNoticeData(notices: NoticeIconList[]): NoticeItem[] {
     const data = this.data.slice();
@@ -64,12 +90,14 @@ export class HeaderNotifyComponent {
         newItem.datetime = formatDistanceToNow(newItem.datetime as Date, { locale: this.nzI18n.getDateLocale() });
       }
       if (newItem.extra && newItem.status) {
-        newItem.color = ({
-          todo: undefined,
-          processing: 'blue',
-          urgent: 'red',
-          doing: 'gold',
-        } as { [key: string]: string | undefined })[newItem.status];
+        newItem.color = (
+          {
+            todo: undefined,
+            processing: 'blue',
+            urgent: 'red',
+            doing: 'gold',
+          } as { [key: string]: string | undefined }
+        )[newItem.status];
       }
       data.find((w) => w.title === newItem.type).list.push(newItem);
     });
@@ -77,110 +105,72 @@ export class HeaderNotifyComponent {
   }
 
   loadData(): void {
+    this.loadUser();
+    // this.loadRoom();
+
     if (this.loading) {
       return;
     }
     this.loading = true;
     setTimeout(() => {
+      let list = [];
       const now = new Date();
-      this.data = this.updateNoticeData([
-        {
-          id: '000000001',
-          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png',
-          title: '你收到了 14 份新周报',
-          datetime: add(now, { days: 10 }),
-          type: '通知',
-        },
-        {
-          id: '000000002',
-          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/OKJXDXrmkNshAMvwtvhu.png',
-          title: '你推荐的 曲妮妮 已通过第三轮面试',
-          datetime: add(now, { days: -3 }),
-          type: '通知',
-        },
-        {
-          id: '000000003',
-          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/kISTdvpyTAhtGxpovNWd.png',
-          title: '这种模板可以区分多种通知类型',
-          datetime: add(now, { months: -3 }),
-          read: true,
-          type: '通知',
-        },
-        {
-          id: '000000004',
-          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/GvqBnKhFgObvnSGkDsje.png',
-          title: '左侧图标用于区分不同的类型',
-          datetime: add(now, { years: -1 }),
-          type: '通知',
-        },
-        {
-          id: '000000005',
-          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png',
-          title: '内容不要超过两行字，超出时自动截断',
-          datetime: '2017-08-07',
-          type: '通知',
-        },
-        {
-          id: '000000006',
-          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/fcHMVNCjPOsbUGdEduuv.jpeg',
-          title: '曲丽丽 评论了你',
-          description: '描述信息描述信息描述信息',
-          datetime: '2017-08-07',
-          type: '消息',
-        },
-        {
-          id: '000000007',
-          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/fcHMVNCjPOsbUGdEduuv.jpeg',
-          title: '朱偏右 回复了你',
-          description: '这种模板用于提醒谁与你发生了互动，左侧放『谁』的头像',
-          datetime: '2017-08-07',
-          type: '消息',
-        },
-        {
-          id: '000000008',
-          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/fcHMVNCjPOsbUGdEduuv.jpeg',
-          title: '标题',
-          description: '这种模板用于提醒谁与你发生了互动，左侧放『谁』的头像',
-          datetime: '2017-08-07',
-          type: '消息',
-        },
-        {
-          id: '000000009',
-          title: '任务名称',
-          description: '任务需要在 2017-01-12 20:00 前启动',
-          extra: '未开始',
-          status: 'todo',
-          type: '待办',
-        },
-        {
-          id: '000000010',
-          title: '第三方紧急代码变更',
-          description: '冠霖提交于 2017-01-06，需在 2017-01-07 前完成代码变更任务',
-          extra: '马上到期',
-          status: 'urgent',
-          type: '待办',
-        },
-        {
-          id: '000000011',
-          title: '信息安全考试',
-          description: '指派竹尔于 2017-01-09 前完成更新并发布',
-          extra: '已耗时 8 天',
-          status: 'doing',
-          type: '待办',
-        },
-        {
-          id: '000000012',
-          title: 'ABCD 版本发布',
-          description: '冠霖提交于 2017-01-06，需在 2017-01-07 前完成代码变更任务',
-          extra: '进行中',
-          status: 'processing',
-          type: '待办',
-        },
-      ]);
+      // this.data = this.updateNoticeData([
+
+      //   {
+      //     id: '000000008',
+      //     avatar: 'https://gw.alipayobjects.com/zos/rmsportal/fcHMVNCjPOsbUGdEduuv.jpeg',
+      //     title: '标题',
+      //     description: '这种模板用于提醒谁与你发生了互动，左侧放『谁』的头像',
+      //     datetime: '2017-08-07',
+      //     type: '完成',
+      //   },
+
+      //   {
+      //     id: '000000012',
+      //     title: 'ABCD 版本发布',
+      //     description: '冠霖提交于 2017-01-06，需在 2017-01-07 前完成代码变更任务',
+      //     extra: '进行中',
+      //     status: 'processing',
+      //     type: '待办',
+      //   },
+      // ]);
+      this.notifyService.findAll().subscribe((data) => {
+        data = data.filter((row) => row.user_Id === this.userId);
+        data.forEach((element) => {
+          if (element.status === 'Finish') {
+            element.type = '完成';
+            element.extra = '已完成';
+            element.status = 'processing';
+          } else {
+            element.type = '待办';
+            element.extra = '进行中';
+            element.status = 'doing';
+          }
+          list.push({
+            avatar: 'https://gw.alipayobjects.com/zos/rmsportal/fcHMVNCjPOsbUGdEduuv.jpeg',
+            id: element.id,
+            title: element.content,
+            description: '用户：' + this.converseUser(element.user_Id),
+            type: element.type,
+            status: element.status,
+            extra: element.extra,
+
+            // id: '000000012',
+            // title: 'ABCD 版本发布',
+            // description: '冠霖提交于 2017-01-06，需在 2017-01-07 前完成代码变更任务',
+            // extra: '进行中',
+            // status: 'processing',
+            // type: '待办',
+          });
+        });
+        this.data = this.updateNoticeData(list);
+        this.count = list.length;
+      });
 
       this.loading = false;
-      this.cdr.detectChanges();
-    }, 500);
+      // this.cdr.detectChanges();
+    });
   }
 
   clear(type: string): void {
@@ -189,5 +179,57 @@ export class HeaderNotifyComponent {
 
   select(res: NoticeIconSelect): void {
     this.msg.success(`点击了 ${res.title} 的 ${res.item.title}`);
+  }
+
+  /**
+   * 读取房间内容
+   */
+  loadRoom() {
+    this.roomService.findAll().subscribe((data) => {
+      let CascadeData = [];
+      CascadeData = this.fomatCascadeData(data);
+    });
+  }
+  /**
+   * 读取角色信息
+   */
+  loadUser() {
+    this.userService.findAll().subscribe((data) => {
+      data.forEach((item) => {
+        this.userMap.set(item.id, item.name);
+      });
+    });
+  }
+
+  /**
+   * 格式成级联选择数据
+   */
+  fomatCascadeData(data?: Array<any>): Array<any> {
+    data = data.filter((row) => row.id > 0);
+    data = [...data];
+    data.forEach((item) => {
+      this.roomMap.set(item.id, item.hallName + '/' + item.roomName);
+    });
+    data.forEach((item) => {
+      item.value = item.id;
+      item.label = item.roomName;
+      item.children = item.children && item.children.length > 0 ? item.children : null;
+      if (item && item.children && item.children.length > 0) {
+        this.fomatCascadeData(item.children);
+      } else if (!item.organizationType || !item.children || item.children.length === 0) {
+        item.isLeaf = true;
+      }
+    });
+    return [...data];
+  }
+
+  /**
+   * 回显
+   */
+  converseUser(id: string) {
+    return this.userMap.get(id);
+  }
+  converseRoom(id: string) {
+    return this.roomMap.get(id);
   }
 }

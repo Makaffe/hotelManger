@@ -19,7 +19,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
       <div nz-menu class="wd-lg">
         <div *ngIf="loading" class="mx-lg p-lg"><nz-spin></nz-spin></div>
         <nz-card *ngIf="!loading" nzTitle="Notifications" nzBordered="false" class="ant-card__body-nopadding">
-          <ng-template #extra><i nz-icon nzType="plus"></i></ng-template>
+          <ng-template #extra>
+            <!-- <i nz-icon nzType="plus"></i> -->
+          </ng-template>
           <div nz-row [nzType]="'flex'" [nzJustify]="'center'" [nzAlign]="'middle'" class="py-sm point">
             <div nz-col [nzSpan]="4" class="text-center">
               <nz-avatar [nzSrc]="'./assets/tmp/img/1.png'"></nz-avatar>
@@ -66,9 +68,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
             </div>
           </div>
           <div nz-row>
-            <div nz-col [nzSpan]="24" class="pt-md border-top-1 text-center text-grey point">
-              See All
-            </div>
+            <div nz-col [nzSpan]="24" class="pt-md border-top-1 text-center text-grey point">See All</div>
           </div>
         </nz-card>
       </div>
@@ -79,7 +79,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 export class HeaderTaskComponent {
   loading = true;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor(private cdr: ChangeDetectorRef) {}
 
   change() {
     setTimeout(() => {

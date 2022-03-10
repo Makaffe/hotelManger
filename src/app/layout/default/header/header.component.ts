@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CacheService } from '@delon/cache';
 import { App, SettingsService } from '@delon/theme';
 
 @Component({
@@ -7,6 +8,10 @@ import { App, SettingsService } from '@delon/theme';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
+  /**
+   * 用户类型
+   */
+  role = this.cacheService.get('__user', { mode: 'none' }).userType;
   searchToggleStatus: boolean;
 
   get app(): App {
@@ -17,7 +22,7 @@ export class HeaderComponent {
     return this.settings.layout.collapsed;
   }
 
-  constructor(private settings: SettingsService) {}
+  constructor(private settings: SettingsService, private cacheService: CacheService) {}
 
   toggleCollapsedSidebar() {
     this.settings.setLayout('collapsed', !this.settings.layout.collapsed);

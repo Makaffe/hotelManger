@@ -19,11 +19,11 @@
       </a>
     </li>
     <!-- Lock Page -->
-    <!-- <li class="hidden-mobile">
+    <li class="hidden-mobile">
       <div class="alain-default__nav-item" [routerLink]="['/lock']">
-        <i nz-icon nzType="lock"></i>
+        <i nz-icon nzType="bulb"></i>
       </div>
-    </li> -->
+    </li>
     <!-- Search Button -->
     <li class="hidden-pc" (click)="searchToggleChange()">
       <div class="alain-default__nav-item">
@@ -34,17 +34,17 @@
   <!-- <header-search class="alain-default__search" [toggleChange]="searchToggleStatus"></header-search> -->
   <ul class="alain-default__nav">
     <!-- Notify -->
-    <li>
-      <header-notify></header-notify>
+    <li *ngIf="role === 'User'" class="hidden-mobile">
+      <header-notify> </header-notify>
     </li>
     <!-- Task -->
     <!-- <li class="hidden-mobile">
       <header-task></header-task>
     </li> -->
     <!-- App Icons -->
-    <!-- <li class="hidden-mobile">
+    <li *ngIf="role === 'User'" class="hidden-mobile">
       <header-icon></header-icon>
-    </li> -->
+    </li>
     <!-- Settings -->
     <li class="hidden-mobile">
       <div class="alain-default__nav-item" nz-dropdown [nzDropdownMenu]="settingsMenu" nzTrigger="click" nzPlacement="bottomRight">

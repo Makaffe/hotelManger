@@ -21,6 +21,7 @@ import { userCommentComponent } from './UserComponent/userComment/userComment.co
 import { UserRecommendComponent } from './UserComponent/userRecommend/userRecommend.component';
 import { RoleComponent } from './role/role.component';
 import { RecommendDetailComponent } from './UserComponent/userRecommend/recommendDetail.component';
+import { MessageComponent } from './Message/Message.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,7 @@ const routes: Routes = [
       { path: 'userRecommend', component: UserRecommendComponent, data: { title: '推荐房型' } },
       { path: 'recommendDetail/:id', component: RecommendDetailComponent, data: { title: '房型详情' }, runGuardsAndResolvers: 'always' },
       { path: 'role', component: RoleComponent, data: { title: '用户管理' } },
+      { path: 'message', component: MessageComponent, data: { title: '用户消息' } },
 
       // 业务子模块
       // { path: 'widgets', loadChildren: () => import('./widgets/widgets.module').then(m => m.WidgetsModule) },
