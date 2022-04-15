@@ -85,7 +85,7 @@ export class RoomComponent implements OnInit {
 
   load() {
     this.roomService.findAll().subscribe((data) => {
-      this.listData = data;
+      this.listData = data.filter((item) => item.del_flag !== '1');
       this.listData.forEach((item) => {
         this.mapOfExpandedData[item.id] = this.convertTreeToList(item);
       });

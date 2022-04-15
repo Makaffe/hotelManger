@@ -40,7 +40,13 @@
                 <nz-divider nzType="vertical"></nz-divider>
                 <a (click)="edit(item, true)">查看</a>
                 <nz-divider nzType="vertical"></nz-divider>
-                <a nz-popconfirm nzPopconfirmPlacement="bottom" nzPopconfirmTitle="是否要删除该条数据" (nzOnConfirm)="delete(item.id)">
+                <a
+                  *ngIf="item.status !== '0'"
+                  nz-popconfirm
+                  nzPopconfirmPlacement="bottom"
+                  nzPopconfirmTitle="是否要删除该条数据"
+                  (nzOnConfirm)="delete(item.id)"
+                >
                   删除
                 </a>
               </td>

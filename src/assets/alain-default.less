@@ -3286,6 +3286,21 @@ this.tinycolor = tinycolor;
 [data-theme='dark'] :host ::ng-deep .icon:hover {
   color: #fff;
 }
+:host ::ng-deep .ant-tabs .ant-tabs-bar {
+  border-bottom: 0;
+}
+:host ::ng-deep .icon {
+  color: rgba(0, 0, 0, 0.2);
+}
+:host ::ng-deep .icon:hover {
+  color: @primary-color;
+}
+[data-theme='dark'] :host ::ng-deep .icon {
+  color: rgba(255, 255, 255, 0.2);
+}
+[data-theme='dark'] :host ::ng-deep .icon:hover {
+  color: #fff;
+}
 ::ng-deep .register-password-cdk .success {
   color: #52c41a;
 }

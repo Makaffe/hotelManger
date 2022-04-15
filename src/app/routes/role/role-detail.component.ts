@@ -114,6 +114,7 @@ export class RoleDetailComponent implements OnInit {
       userType: item ? item.userType : null,
       bookingTime: item ? item.bookingTime : null,
       token: item ? item.token : null,
+      del_flag: item ? item.del_flag : '0',
     };
   }
 

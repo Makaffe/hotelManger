@@ -22,6 +22,7 @@ import { RoleComponent } from './role/role.component';
 import { RoleDetailComponent } from './role/role-detail.component';
 import { RecommendDetailComponent } from './UserComponent/userRecommend/recommendDetail.component';
 import { MessageComponent } from './Message/Message.component';
+import { NewLoginComponent } from './passport/login/newLogin.component';
 
 const COMPONENTS = [
   RoleComponent,
@@ -32,6 +33,7 @@ const COMPONENTS = [
   // passport pages
   MessageComponent,
   UserLoginComponent,
+  NewLoginComponent,
   BookingDetailComponent,
   RoomDetailComponent,
   UserRecommendComponent,

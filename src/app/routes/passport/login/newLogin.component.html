@@ -1,0 +1,49 @@
+<form #form="ngForm" nz-form>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="7" nzRequired>用户名</nz-form-label>
+    <nz-form-control [nzSpan]="17" nzHasFeedback nzValidatingTip="Validating...">
+      <input
+        nz-input
+        required
+        autocomplete="off"
+        name="username"
+        [(ngModel)]="paramsItem.username"
+        placeholder="请填写"
+        #image="ngModel"
+        maxlength="255"
+      />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="7" nzRequired>密码</nz-form-label>
+    <nz-form-control [nzSpan]="17" nzHasFeedback nzValidatingTip="Validating...">
+      <input
+        nz-input
+        required
+        autocomplete="off"
+        type="password"
+        name="password"
+        [(ngModel)]="paramsItem.password"
+        placeholder="请填写"
+        #password="ngModel"
+        maxlength="255"
+      />
+    </nz-form-control>
+  </nz-form-item>
+  <!-- <nz-form-item>
+    <nz-form-label [nzSpan]="7" nzRequired>登录类型</nz-form-label>
+    <nz-form-control [nzSpan]="17" nzHasFeedback nzValidatingTip="Validating...">
+      <nz-select [nzAllowClear]="false" nzShowSearch nzPlaceHolder="请选择" name="userType"
+        [(ngModel)]="paramsItem.userType">
+        <nz-option *ngFor="let option of userTypeList" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item> -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="7" [nzNoColon]="true"></nz-form-label>
+    <nz-form-control [nzSpan]="17" nzHasFeedback nzValidatingTip="Validating...">
+      <button nz-button nzType="primary" (click)="login()" [nzLoading]="loginLoading">登录</button>
+      <button nz-button nzType="primary" (click)="registry()">{{ 'app.login.signup' | translate }}</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>

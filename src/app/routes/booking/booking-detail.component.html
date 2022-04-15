@@ -87,13 +87,13 @@
     <nz-form-item *ngIf="radioValue === 'duo'">
       <nz-form-label [nzSpan]="7" nzRequired>同住姓名</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
-        <input nz-input name="temporaryName" [(ngModel)]="this.paramsItem.temporaryName" />
+        <input nz-input name="temporaryName" [readOnly]="isWatch" [(ngModel)]="this.paramsItem.temporaryName" />
       </nz-form-control>
     </nz-form-item>
     <nz-form-item *ngIf="radioValue === 'duo'">
       <nz-form-label [nzSpan]="7" nzRequired>同行身份证</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating...">
-        <input nz-input name="temporaryID" [(ngModel)]="this.paramsItem.temporaryID" />
+        <input nz-input name="temporaryID" [readOnly]="isWatch" [(ngModel)]="this.paramsItem.temporaryID" />
       </nz-form-control>
     </nz-form-item>
   </form>

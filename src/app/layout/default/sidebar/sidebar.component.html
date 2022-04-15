@@ -51,6 +51,9 @@
   </ul>
   <ul nz-menu *ngIf="role === 'Worker'" style="margin-top: 20px">
     <li nz-menu-item nzMatchRouter style="text-align: center">
+      <a [routerLink]="['/dashboard']">首页</a>
+    </li>
+    <li nz-menu-item nzMatchRouter style="text-align: center">
       <a [routerLink]="['/booking']">房间预定订单</a>
     </li>
     <li nz-menu-item nzMatchRouter style="text-align: center">

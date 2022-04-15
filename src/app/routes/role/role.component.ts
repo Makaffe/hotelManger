@@ -64,7 +64,7 @@ export class RoleComponent implements OnInit {
   // 读取列表()
   load() {
     this.userService.findAll().subscribe((data) => {
-      this.listOfData = data;
+      this.listOfData = data.filter((item) => item.del_flag !== '1');
     });
   }
 

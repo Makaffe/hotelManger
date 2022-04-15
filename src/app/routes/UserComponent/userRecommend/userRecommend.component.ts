@@ -46,14 +46,14 @@ export class UserRecommendComponent implements OnInit {
   loadSurplus() {
     this.roomSurplus = [];
     this.roomService.findAllByNotTree().subscribe((data) => {
-      this.roomSurplus = data.filter((row) => row.status === true && row.parent_Id !== null);
+      this.roomSurplus = data.filter((row) => row.status === true && row.parent_Id !== null && row.del_flag !== '1');
     });
   }
 
   loadRecommend() {
     this.roomRecommend = [];
     this.userRecommendService.findAll().subscribe((data) => {
-      const listData1 = data;
+      const listData1 = data.filter((item) => item[9] !== '1');
 
       // tslint:disable-next-line:prefer-for-of
       for (let i = 0; i < listData1.length; i++) {

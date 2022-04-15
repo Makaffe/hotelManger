@@ -44,4 +44,9 @@ export interface RoomDTO {
    * 房间图片
    */
   image: string;
+
+  /**
+   * 删除字段
+   */
+  del_flag: string;
 }

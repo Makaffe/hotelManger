@@ -141,7 +141,7 @@ export class BookingComponent implements OnInit {
    * 格式成级联选择数据
    */
   fomatCascadeData(data?: Array<any>): Array<any> {
-    data = data.filter((row) => row.id > 0);
+    data = data.filter((row) => row.id > 0 && row.del_flag !== '1');
     data = [...data];
     data.forEach((item) => {
       this.roomMap.set(item.id, item.hallName + '/' + item.roomName);

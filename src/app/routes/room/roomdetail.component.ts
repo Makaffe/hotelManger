@@ -67,6 +67,7 @@ export class RoomDetailComponent implements OnInit {
       status: item ? item.status : null,
       chidren: item ? item.chidren : [],
       image: item ? item.image : null,
+      del_flag: item ? item.del_flag : null,
     };
   }
 

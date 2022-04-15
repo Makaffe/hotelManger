@@ -22,6 +22,7 @@ import { UserRecommendComponent } from './UserComponent/userRecommend/userRecomm
 import { RoleComponent } from './role/role.component';
 import { RecommendDetailComponent } from './UserComponent/userRecommend/recommendDetail.component';
 import { MessageComponent } from './Message/Message.component';
+import { NewLoginComponent } from './passport/login/newLogin.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,7 @@ const routes: Routes = [
     path: 'passport',
     component: LayoutPassportComponent,
     children: [
+      { path: 'userlogin', component: NewLoginComponent, data: { title: '用户登录' } },
       { path: 'login', component: UserLoginComponent, data: { title: '登录' } },
       { path: 'register', component: UserRegisterComponent, data: { title: '注册' } },
       { path: 'register-result', component: UserRegisterResultComponent, data: { title: '注册结果' } },
